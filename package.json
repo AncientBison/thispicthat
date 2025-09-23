@@ -52,6 +52,7 @@
     "@heroui/user": "2.2.21",
     "@react-aria/ssr": "3.9.10",
     "@react-aria/visually-hidden": "3.8.27",
+    "browser-image-compression": "^2.0.2",
     "clsx": "2.1.1",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.44.5",

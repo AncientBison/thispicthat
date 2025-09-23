@@ -1,4 +1,3 @@
-import env from "@/env";
 import {
   boolean,
   timestamp,
@@ -6,11 +5,42 @@ import {
   text,
   primaryKey,
   integer,
+  customType,
 } from "drizzle-orm/pg-core";
-import { drizzle } from "drizzle-orm/node-postgres";
 import type { AdapterAccountType } from "@auth/core/adapters";
 
-export const db = drizzle(env.POSTGRES_URL);
+export const image = customType<{
+  data: Buffer;
+  driverData: Buffer;
+}>({
+  dataType() {
+    return "bytea";
+  },
+  fromDriver(value) {
+    if (typeof value === "string") {
+      return Buffer.from(value, "hex");
+    }
+
+    return value;
+  },
+  toDriver(value: Buffer) {
+    return value;
+  },
+});
+
+export const items = pgTable("item", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  image: image("image").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
 
 export const users = pgTable("user", {
   id: text("id")

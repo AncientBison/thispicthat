@@ -12,8 +12,12 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
+import { Spinner } from "@heroui/spinner";
 import ImageUpload from "@/components/imageUpload";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { createItemEntry } from "@/db/items";
+import imageCompression from "browser-image-compression";
+import { addToast } from "@heroui/toast";
 
 export default function NewItemModal() {
   const [isOpen, setIsOpen] = useAtom(newItemModalOpenAtom);
@@ -63,15 +67,33 @@ export default function NewItemModal() {
 function SubmitButton({ onClose }: { onClose: () => void }) {
   const name = useAtomValue(itemNameAtom);
   const image = useAtomValue(itemImageAtom);
+  const [loading, setLoading] = useState(false);
 
-  const onClick = useCallback(() => {
-    onClose();
-    // Handle create action here
-  }, []);
+  const onClick = useCallback(async () => {
+    setLoading(true);
+    try {
+      const processedImage = await imageCompression(image!, {
+        maxSizeMB: 0.8,
+        useWebWorker: true,
+      });
+      await createItemEntry({ name, image: processedImage });
+      addToast({ color: "success", title: "Item created" });
+      onClose();
+    } catch (error) {
+      addToast({ color: "danger", title: "Error creating item" });
+      onClose();
+    } finally {
+      setLoading(false);
+    }
+  }, [name, image, onClose]);
 
   return (
-    <Button color="primary" onPress={onClick}>
-      Create
+    <Button
+      isDisabled={name === "" || image === null || loading}
+      color="primary"
+      onPress={onClick}
+    >
+      {loading ? <Spinner color="default" size="sm" /> : "Create"}
     </Button>
   );
 }

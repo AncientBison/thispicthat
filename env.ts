@@ -7,6 +7,7 @@ const envSchema = z.object({
   AUTH_SECRET: z.string(),
   AUTH_GOOGLE_ID: z.string(),
   AUTH_GOOGLE_SECRET: z.string(),
+  MAX_IMAGE_DIMENSION: z.coerce.number(),
   ENV: z
     .union([
       z.literal("development"),

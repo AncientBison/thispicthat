@@ -81,8 +81,13 @@ export async function getItems() {
     throw new Error("User not authenticated");
   }
 
-  return db.query.items.findMany({
+  const items = await db.query.items.findMany({
     where: (items, { eq }) => eq(items.userId, userId),
     orderBy: (items, { desc }) => desc(items.createdAt),
   });
+
+  return items.map((item) => ({
+    name: item.name,
+    image: item.image.toString("base64"),
+  }));
 }

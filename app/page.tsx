@@ -1,9 +1,15 @@
-import NewItemModal from "@/components/newItemModal";
+import ItemList from "@/components/itemList";
+import { getItems } from "@/db/items";
+import { Suspense } from "react";
 
 export default async function Home() {
+  const items = await getItems();
+
   return (
     <>
-      <NewItemModal />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ItemList items={items} />
+      </Suspense>
     </>
   );
 }

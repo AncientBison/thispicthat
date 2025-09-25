@@ -6,6 +6,7 @@ import { items } from "@/db/schema";
 import { auth } from "@/auth";
 import env from "@/env";
 import { and, eq } from "drizzle-orm";
+import { id } from "zod/v4/locales";
 
 export async function createItemEntry(item: { name: string; image: File }) {
   const session = await auth();
@@ -89,5 +90,6 @@ export async function getItems() {
   return items.map((item) => ({
     name: item.name,
     image: item.image.toString("base64"),
+    id: item.id,
   }));
 }

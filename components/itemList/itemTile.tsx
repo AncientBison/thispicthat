@@ -4,14 +4,21 @@ import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { TrashIcon } from "@/components/icons";
 import { Button } from "@heroui/button";
+import { useSetAtom } from "jotai";
+import { confirmDeleteModalOpenAtom, itemToDeleteAtom } from "@/atoms";
 
 export default function ItemTile({
   name,
   image,
+  id,
 }: {
   name: string;
   image: string;
+  id: string;
 }) {
+  const setConfirmDeleteModalOpen = useSetAtom(confirmDeleteModalOpenAtom);
+  const setitemToDelete = useSetAtom(itemToDeleteAtom);
+
   return (
     <Card key={name} shadow="md" className="mb-4 break-inside-avoid">
       <CardBody className="overflow-visible p-0">
@@ -26,7 +33,15 @@ export default function ItemTile({
       </CardBody>
       <CardFooter className="flex justify-between">
         <span className="font-semibold">{name}</span>
-        <Button isIconOnly variant="light" className="text-red-500">
+        <Button
+          isIconOnly
+          variant="light"
+          color="danger"
+          onPress={() => {
+            setConfirmDeleteModalOpen(true);
+            setitemToDelete({ id, name });
+          }}
+        >
           <TrashIcon />
         </Button>
       </CardFooter>

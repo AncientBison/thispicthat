@@ -1,6 +1,11 @@
 "use client";
 
-import { itemImageAtom, itemNameAtom, newItemModalOpenAtom } from "@/atoms";
+import {
+  itemImageAtom,
+  itemNameAtom,
+  newItemModalOpenAtom,
+  itemsAtom,
+} from "@/atoms";
 import {
   Modal,
   ModalContent,
@@ -8,7 +13,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@heroui/modal";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
@@ -64,21 +69,35 @@ export default function NewItemModal() {
   );
 }
 
+const toBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+  });
+
 function SubmitButton({ onClose }: { onClose: () => void }) {
-  const name = useAtomValue(itemNameAtom);
-  const image = useAtomValue(itemImageAtom);
+  const [name] = useAtom(itemNameAtom);
+  const [image] = useAtom(itemImageAtom);
+  const setItems = useSetAtom(itemsAtom);
   const [loading, setLoading] = useState(false);
 
   const onClick = useCallback(async () => {
     setLoading(true);
+
     try {
       const processedImage = await imageCompression(image!, {
         maxSizeMB: 0.8,
         useWebWorker: true,
       });
-      await createItemEntry({ name, image: processedImage });
+      const id = await createItemEntry({ name, image: processedImage });
       addToast({ color: "success", title: "Item created" });
       onClose();
+
+      const imageBase64 = await toBase64(processedImage);
+
+      setItems((items) => [...items, { name, image: imageBase64, id }]);
     } catch (error) {
       addToast({ color: "danger", title: "Error creating item" });
       onClose();

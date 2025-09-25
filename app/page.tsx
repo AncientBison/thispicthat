@@ -1,14 +1,16 @@
+import ConfirmDeleteModal from "@/components/confirmDeleteModal";
 import ItemList from "@/components/itemList";
 import { getItems } from "@/db/items";
 import { Suspense } from "react";
 
-export default async function Home() {
-  const items = await getItems();
+export default function Home() {
+  const items = getItems();
 
   return (
     <>
+      <ConfirmDeleteModal />
       <Suspense fallback={<div>Loading...</div>}>
-        <ItemList items={items} />
+        <ItemList itemsPromise={items} />
       </Suspense>
     </>
   );

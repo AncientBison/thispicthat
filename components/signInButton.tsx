@@ -1,4 +1,5 @@
 import { signIn } from "@/auth";
+import { Button } from "@heroui/button";
 
 export function SignInButton() {
   return (
@@ -8,7 +9,9 @@ export function SignInButton() {
         await signIn();
       }}
     >
-      <button type="submit">Sign in</button>
+      <Button type="submit" size="lg" color="primary" variant="ghost">
+        Sign in
+      </Button>
     </form>
   );
 }

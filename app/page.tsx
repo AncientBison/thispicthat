@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal";
 import ItemList from "@/components/itemList";
 import { getItems } from "@/db/items";
+import { Spinner } from "@heroui/spinner";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -16,7 +17,13 @@ export default async function Home() {
   return (
     <>
       <ConfirmDeleteModal />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center w-full min-h-screen">
+            <Spinner size="lg" />
+          </div>
+        }
+      >
         <ItemList itemsPromise={itemsPromise} />
       </Suspense>
     </>

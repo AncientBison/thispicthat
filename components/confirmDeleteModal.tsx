@@ -13,10 +13,13 @@ import { Spinner } from "@heroui/spinner";
 import { useCallback, useState } from "react";
 import { deleteItemEntry } from "@/db/items";
 import { addToast } from "@heroui/toast";
+import { useTranslations } from "next-intl";
 
 export default function ConfirmDeleteModal() {
   const [isOpen, setIsOpen] = useAtom(confirmDeleteModalOpenAtom);
   const itemToDelete = useAtomValue(itemToDeleteAtom);
+
+  const t = useTranslations("ConfirmDeleteModal");
 
   return (
     <Modal isOpen={isOpen} onOpenChange={(open: boolean) => setIsOpen(open)}>
@@ -25,15 +28,19 @@ export default function ConfirmDeleteModal() {
           <>
             <ModalHeader>
               <h1 className="font-semibold text-2xl pb-4">
-                Are you sure you want to delete{" "}
-                <span className="font-bold">{itemToDelete?.name}</span>?
+                {t.rich("message", {
+                  b: (children) => (
+                    <span className="font-bold">{children}</span>
+                  ),
+                  item: itemToDelete?.name!,
+                })}
               </h1>
             </ModalHeader>
             <ModalFooter className="flex flex-col gap-2">
               <Divider />
               <span className="flex gap-2 justify-end">
                 <Button color="default" variant="light" onPress={onClose}>
-                  Close
+                  {t("close")}
                 </Button>
                 <ConfirmDeleteButton onClose={onClose} />
               </span>
@@ -49,6 +56,8 @@ function ConfirmDeleteButton({ onClose }: { onClose: () => void }) {
   const id = useAtomValue(itemToDeleteAtom)?.id;
   const setItems = useSetAtom(itemsAtom);
   const [loading, setLoading] = useState(false);
+  
+  const t = useTranslations("ConfirmDeleteModal");
 
   const onClick = useCallback(async () => {
     setLoading(true);
@@ -72,7 +81,7 @@ function ConfirmDeleteButton({ onClose }: { onClose: () => void }) {
 
   return (
     <Button isDisabled={loading} color="danger" onPress={onClick}>
-      {loading ? <Spinner color="default" size="sm" /> : "Delete"}
+      {loading ? <Spinner color="default" size="sm" /> : t("delete")}
     </Button>
   );
 }

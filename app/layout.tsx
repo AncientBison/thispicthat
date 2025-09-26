@@ -5,6 +5,8 @@ import { Providers } from "@/app/providers";
 
 import { siteConfig } from "@/config/site";
 import ThemeSwitcher from "@/components/themeSwitcher";
+import { getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 export const metadata: Metadata = {
   title: {
@@ -24,7 +26,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -33,12 +35,14 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <head />
       <body className="min-h-screen text-foreground bg-background font-sans antialiased">
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          {children}
-          <span className="fixed bottom-4 right-4 z-50">
-            <ThemeSwitcher />
-          </span>
-        </Providers>
+        <NextIntlClientProvider>
+          <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+            {children}
+            <span className="fixed bottom-4 right-4 z-50">
+              <ThemeSwitcher />
+            </span>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

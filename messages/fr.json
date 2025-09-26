@@ -1,0 +1,26 @@
+{
+  "SignIn": {
+    "welcome": "Bienvenue sur TofDeÇa!",
+    "prompt": "Veuillez vous connecter pour commencer votre voyage.",
+    "button": "Se Connecter"
+  },
+  "ConfirmDeleteModal": {
+    "message": "Êtes-vous sûr de vouloir supprimer <b>{item}</b>?",
+    "close": "Fermer",
+    "delete": "Supprimer"
+  },
+  "ImageUpload": {
+    "clickOrDrag": "Cliquez ou glissez-déposez une image"
+  },
+  "NewItemModal": {
+    "title": "Créer un nouvel objet",
+    "itemNamePlaceholder": "Nom d'objet",
+    "itemCreated": "Objet créé",
+    "errorCreatingItem": "Erreur de création d'objet",
+    "create": "Créer"
+  },
+  "Error": {
+    "errorText": "Quelque chose s'est mal passé!",
+    "tryAgain": "Essayer à nouveau"
+  }
+}

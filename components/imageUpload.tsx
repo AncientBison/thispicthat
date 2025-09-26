@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import clsx from "clsx";
 import { UploadIcon } from "@/components/icons";
+import { useTranslations } from "next-intl";
 
 export default function ImageUpload({
   onUpload,
@@ -12,6 +13,8 @@ export default function ImageUpload({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+
+  const t = useTranslations("ImageUpload");
 
   const handleClick = () => {
     inputRef.current?.click();
@@ -68,13 +71,13 @@ export default function ImageUpload({
           />
           <div className="absolute text-center inset-0 bg-black/40 opacity-0 hover:opacity-100 flex flex-col items-center justify-center text-white text-lg font-medium transition-opacity">
             <UploadIcon />
-            <p>Click or drag image to upload</p>
+            <p>{t("clickOrDrag")}</p>
           </div>
         </>
       ) : (
         <span className="text-gray-500 text-lg text-center px-4 flex flex-col items-center justify-center gap-2">
           <UploadIcon />
-          <p>Click or drag image to upload</p>
+          <p>{t("clickOrDrag")}</p>
         </span>
       )}
       <input

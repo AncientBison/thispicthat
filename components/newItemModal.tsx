@@ -23,11 +23,14 @@ import { useCallback, useState } from "react";
 import { createItemEntry } from "@/db/items";
 import imageCompression from "browser-image-compression";
 import { addToast } from "@heroui/toast";
+import { useTranslations } from "next-intl";
 
 export default function NewItemModal() {
   const [isOpen, setIsOpen] = useAtom(newItemModalOpenAtom);
   const setName = useSetAtom(itemNameAtom);
   const setItemImage = useSetAtom(itemImageAtom);
+
+  const t = useTranslations("NewItemModal");
 
   return (
     <Modal isOpen={isOpen} onOpenChange={(open: boolean) => setIsOpen(open)}>
@@ -35,7 +38,7 @@ export default function NewItemModal() {
         {(onClose) => (
           <>
             <ModalHeader>
-              <h1 className="font-bold text-2xl pb-4">Create New Item</h1>
+              <h1 className="font-bold text-2xl pb-4">{t("title")}</h1>
             </ModalHeader>
             <ModalBody>
               <ImageUpload onUpload={(file) => setItemImage(file)} />
@@ -50,7 +53,7 @@ export default function NewItemModal() {
                 size="lg"
                 variant="faded"
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Item Name"
+                placeholder={t("itemNamePlaceholder")}
               />
             </ModalBody>
             <ModalFooter className="flex flex-col gap-2">
@@ -83,6 +86,8 @@ function SubmitButton({ onClose }: { onClose: () => void }) {
   const setItems = useSetAtom(itemsAtom);
   const [loading, setLoading] = useState(false);
 
+  const t = useTranslations("NewItemModal");
+
   const onClick = useCallback(async () => {
     setLoading(true);
 
@@ -92,14 +97,14 @@ function SubmitButton({ onClose }: { onClose: () => void }) {
         useWebWorker: true,
       });
       const id = await createItemEntry({ name, image: processedImage });
-      addToast({ color: "success", title: "Item created" });
+      addToast({ color: "success", title: t("itemCreated") });
       onClose();
 
       const imageBase64 = await toBase64(processedImage);
 
       setItems((items) => [...items, { name, image: imageBase64, id }]);
     } catch (error) {
-      addToast({ color: "danger", title: "Error creating item" });
+      addToast({ color: "danger", title: t("errorCreatingItem") });
       onClose();
     } finally {
       setLoading(false);
@@ -112,7 +117,7 @@ function SubmitButton({ onClose }: { onClose: () => void }) {
       color="primary"
       onPress={onClick}
     >
-      {loading ? <Spinner color="default" size="sm" /> : "Create"}
+      {loading ? <Spinner color="default" size="sm" /> : t("create")}
     </Button>
   );
 }

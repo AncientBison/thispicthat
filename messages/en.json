@@ -1,0 +1,26 @@
+{
+  "SignIn": {
+    "welcome": "Welcome to ThisPicThat!",
+    "prompt": "Please sign in to start your journey.",
+    "button": "Sign In"
+  },
+  "ConfirmDeleteModal": {
+    "message": "Are you sure you want to delete <b>{item}</b>?",
+    "close": "Close",
+    "delete": "Delete"
+  },
+  "ImageUpload": {
+    "clickOrDrag": "Click or drag image to upload"
+  },
+  "NewItemModal": {
+    "title": "Create new item",
+    "itemNamePlaceholder": "Item name",
+    "itemCreated": "Item created",
+    "errorCreatingItem": "Error creating item",
+    "create": "Create"
+  },
+  "Error": {
+    "errorText": "Something went wrong!",
+    "tryAgain": "Try again"
+  }
+}

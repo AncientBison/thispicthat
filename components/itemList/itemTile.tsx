@@ -17,7 +17,7 @@ export default function ItemTile({
   id: string;
 }) {
   const setConfirmDeleteModalOpen = useSetAtom(confirmDeleteModalOpenAtom);
-  const setitemToDelete = useSetAtom(itemToDeleteAtom);
+  const setItemToDelete = useSetAtom(itemToDeleteAtom);
 
   return (
     <Card key={name} shadow="md" className="mb-4 break-inside-avoid">
@@ -27,7 +27,7 @@ export default function ItemTile({
           className="w-full object-cover rounded-b-none"
           radius="lg"
           shadow="sm"
-          src={`data:image/png;base64,${image}`}
+          src={`data:image/webp;base64,${image}`}
           width="100%"
         />
       </CardBody>
@@ -39,7 +39,7 @@ export default function ItemTile({
           color="danger"
           onPress={() => {
             setConfirmDeleteModalOpen(true);
-            setitemToDelete({ id, name });
+            setItemToDelete({ id, name });
           }}
         >
           <TrashIcon />

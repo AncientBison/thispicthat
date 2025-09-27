@@ -6,19 +6,17 @@ import { UploadIcon } from "@/components/icons";
 import { useTranslations } from "next-intl";
 
 export default function ImageUpload({
+  name = "image",
   onUpload,
 }: {
+  name?: string;
   onUpload?: (file: File) => void;
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const t = useTranslations("ImageUpload");
-
-  const handleClick = () => {
-    inputRef.current?.click();
-  };
 
   const handleFile = (file: File) => {
     if (file && file.type.startsWith("image/")) {
@@ -27,33 +25,20 @@ export default function ImageUpload({
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) handleFile(file);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) handleFile(file);
-  };
-
   return (
     <div
-      onClick={handleClick}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
+      onClick={() => inputRef.current?.click()}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
+      onDragLeave={() => setIsDragging(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files?.[0];
+        if (file) handleFile(file);
+      }}
       className={clsx(
         "min-h-32 max-h-64 max-w-full w-fit mx-auto flex items-center justify-center border-4 border-dashed rounded-lg cursor-pointer transition-colors relative overflow-hidden",
         isDragging
@@ -80,12 +65,18 @@ export default function ImageUpload({
           <p>{t("clickOrDrag")}</p>
         </span>
       )}
+
       <input
         ref={inputRef}
         type="file"
+        name={name}
         accept="image/*"
+        required
         className="hidden"
-        onChange={handleChange}
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) handleFile(file);
+        }}
       />
     </div>
   );

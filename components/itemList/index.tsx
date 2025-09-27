@@ -5,6 +5,7 @@ import ItemTile from "@/components/itemList/itemTile";
 import { useAtomValue } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
 import { use } from "react";
+import NewItemTile from "@/components/itemList/NewItemTile";
 
 export default function ItemList({
   itemsPromise,
@@ -19,6 +20,7 @@ export default function ItemList({
 
   return (
     <div className="columns-1 md:columns-2 xl:columns-3 gap-4 p-4 max-w-6xl mx-auto">
+      <NewItemTile />
       {items.map((item) => (
         <ItemTile
           key={item.id}

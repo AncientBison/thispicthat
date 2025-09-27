@@ -22,5 +22,11 @@
   "Error": {
     "errorText": "Quelque chose s'est mal passé!",
     "tryAgain": "Essayer à nouveau"
+  },
+  "ItemList": {
+    "addItem": "Ajouter un nouvel objet"
+  },
+  "ThemeSwitcher": {
+    "switchMode": "Passer au mode {theme, select, dark {sombre} light {clair} other {}}"
   }
 }

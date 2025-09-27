@@ -7,6 +7,7 @@ import { useIsSSR } from "@react-aria/ssr";
 import clsx from "clsx";
 
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
+import { useTranslations } from "next-intl";
 
 export default function ThemeSwitcher({
   className,
@@ -17,6 +18,8 @@ export default function ThemeSwitcher({
 }) {
   const { theme, setTheme } = useTheme();
   const isSSR = useIsSSR();
+
+  const t = useTranslations("ThemeSwitcher");
 
   const onChange = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
@@ -31,7 +34,9 @@ export default function ThemeSwitcher({
     getWrapperProps,
   } = useSwitch({
     isSelected: theme === "light" || isSSR,
-    "aria-label": `Switch to ${theme === "light" || isSSR ? "dark" : "light"} mode`,
+    "aria-label": t("switchMode", {
+      theme: theme === "light" || isSSR ? "dark" : "light",
+    }),
     onChange,
   });
 

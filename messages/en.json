@@ -24,7 +24,21 @@
     "tryAgain": "Try again"
   },
   "ItemList": {
-    "addItem": "Add a new item"
+    "addItem": "Add a new item",
+    "study": "Study"
+  },
+  "Study": {
+    "title": "Studying {collection, select, _ {your items} other {<b>{collection}</b>}}",
+    "prompt": "What is this?",
+    "placeholder": "Type the item name and press Enter",
+    "correct": "Correct",
+    "incorrectPrefix": "Incorrect — correct answer:",
+    "completionTitle": "Well done!",
+    "check": "Check",
+    "backToHome": "Back home",
+    "backToCollection": "Back to {collection}",
+    "noIncorrect": "You got no answers wrong!",
+    "incorrectSummary": "Words to work on:"
   },
   "ThemeSwitcher": {
     "switchMode": "Switch to {theme, select, dark {dark} light {light} other {}} mode"

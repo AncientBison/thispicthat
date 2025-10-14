@@ -20,7 +20,7 @@ export default function ItemTile({
   const setItemToDelete = useSetAtom(itemToDeleteAtom);
 
   return (
-    <Card key={name} shadow="md" className="mb-4 break-inside-avoid">
+    <Card key={name} shadow="md" className="break-inside-avoid">
       <CardBody className="overflow-visible p-0">
         <Image
           alt={name}

@@ -24,9 +24,23 @@
     "tryAgain": "Essayer à nouveau"
   },
   "ItemList": {
-    "addItem": "Ajouter un nouvel objet"
+    "addItem": "Ajouter un nouvel objet",
+    "study": "Étudier"
   },
   "ThemeSwitcher": {
     "switchMode": "Passer au mode {theme, select, dark {sombre} light {clair} other {}}"
+  },
+  "Study": {
+    "backToCollection": "Retour à {collection}",
+    "backToHome": "Accueil",
+    "check": "Vérifier",
+    "completionTitle": "Bien joué!",
+    "correct": "Correct",
+    "incorrectPrefix": "Incorrect — bonne réponse:",
+    "incorrectSummary": "Mots à travailler :",
+    "noIncorrect": "Vous n'avez aucune mauvaise réponse!",
+    "placeholder": "Tapez le nom de l'object et appuyez sur Entrée",
+    "prompt": "Qu'est-ce que c'est?",
+    "title": "Étudier {collection, select, _ {vos objets} other {<b>{collection}</b>}}"
   }
 }

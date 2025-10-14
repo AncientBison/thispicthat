@@ -66,6 +66,7 @@
     "pg": "^8.16.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-plock": "^3.6.1",
     "zod": "^4.1.11"
   },
   "devDependencies": {

@@ -16,7 +16,7 @@ export default function NewItemTile() {
   return (
     <Card
       shadow="md"
-      className="mb-4 break-inside-avoid w-full aspect-square"
+      className="break-inside-avoid w-full aspect-square hover:scale-[102%]"
       isPressable
       onPress={() => {
         setItemName("");

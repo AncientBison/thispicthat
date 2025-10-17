@@ -8,6 +8,7 @@ import {
   customType,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "@auth/core/adapters";
+import { relations } from "drizzle-orm";
 
 export const image = customType<{
   data: Buffer;
@@ -28,6 +29,23 @@ export const image = customType<{
   },
 });
 
+export const collections = pgTable("collection", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const collectionsRelations = relations(collections, ({ many }) => ({
+  collectionItems: many(collectionItems),
+}));
+
 export const items = pgTable("item", {
   id: text("id")
     .primaryKey()
@@ -41,6 +59,37 @@ export const items = pgTable("item", {
     .notNull()
     .defaultNow(),
 });
+
+export const itemsRelations = relations(items, ({ many }) => ({
+  collectionItems: many(collectionItems),
+}));
+
+export const collectionItems = pgTable(
+  "collection_items",
+  {
+    collectionId: text("collection_id")
+      .notNull()
+      .references(() => collections.id, { onDelete: "cascade" }),
+    itemId: text("item_id")
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+  },
+  (t) => [primaryKey({ columns: [t.collectionId, t.itemId] })]
+);
+
+export const collectionItemsRelations = relations(
+  collectionItems,
+  ({ one }) => ({
+    collection: one(collections, {
+      fields: [collectionItems.collectionId],
+      references: [collections.id],
+    }),
+    item: one(items, {
+      fields: [collectionItems.itemId],
+      references: [items.id],
+    }),
+  })
+);
 
 export const users = pgTable("user", {
   id: text("id")

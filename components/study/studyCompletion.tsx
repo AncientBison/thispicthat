@@ -6,10 +6,10 @@ import { Divider } from "@heroui/divider";
 
 export default function StudyCompletion({
   incorrectItems,
-  collectionName,
+  collection,
 }: {
   incorrectItems?: { name: string; image: string; id: string }[];
-  collectionName?: string;
+  collection?: { id: string; name: string };
 }) {
   const t = useTranslations("Study");
 
@@ -49,21 +49,19 @@ export default function StudyCompletion({
       <Divider />
 
       <div className="flex justify-evenly gap-4 mt-4">
-        {collectionName !== undefined && (
+        {collection !== undefined && (
           <Button as={Link} href="/" color="primary">
             {t("backToHome")}
           </Button>
         )}
         <Button
           as={Link}
-          href={
-            collectionName === undefined ? `/` : `/collection/${collectionName}`
-          }
+          href={collection === undefined ? `/` : `/collection/${collection.id}`}
           color="primary"
         >
-          {collectionName === undefined
+          {collection === undefined
             ? t("backToHome")
-            : t("backToCollection", { collection: collectionName })}
+            : t("backToCollection", { collection: collection.name })}
         </Button>
       </div>
     </div>

@@ -1,12 +1,12 @@
 import { auth } from "@/auth";
 import { BackArrowIcon } from "@/components/icons";
 import Study from "@/components/study/study";
-import { getCollectionItems, getCollectionNames } from "@/db/collections";
+import { getCollectionItems, getCollectionNameFromId } from "@/db/collections";
 import { getItems } from "@/db/items";
 import { Spinner } from "@heroui/spinner";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 export default async function Page({
@@ -14,17 +14,16 @@ export default async function Page({
 }: {
   params: Promise<{ collection?: string[] }>;
 }) {
-  const collectionName = (await params)?.collection?.[0];
+  const collectionId = (await params)?.collection?.[0];
 
   const t = await getTranslations("Study");
 
-  const allCollections = await getCollectionNames();
+  const itemsPromise =
+    collectionId === undefined ? getItems() : getCollectionItems(collectionId);
+  const collectionName = collectionId
+    ? await getCollectionNameFromId(collectionId)
+    : undefined;
 
-  if (collectionName !== undefined && !allCollections.includes(collectionName)) {
-    notFound();
-  }
-
-  const itemsPromise = collectionName === undefined ? getItems() : getCollectionItems(collectionName);
   const session = await auth();
 
   if (!session) {
@@ -51,7 +50,14 @@ export default async function Page({
           </div>
         }
       >
-        <Study itemsPromise={itemsPromise} collectionName={collectionName} />
+        <Study
+          itemsPromise={itemsPromise}
+          collection={
+            collectionId === undefined
+              ? undefined
+              : { id: collectionId!, name: collectionName! }
+          }
+        />
       </Suspense>
     </div>
   );

@@ -3,7 +3,7 @@ import ConfirmDeleteModal from "@/components/confirmDeleteModal";
 import { BackArrowIcon } from "@/components/icons";
 import ItemList from "@/components/itemList";
 import NewItemModal from "@/components/newItemModal";
-import { getCollectionItems, getCollectionNames } from "@/db/collections";
+import { getCollectionItems, getCollectionNameFromId } from "@/db/collections";
 import { Spinner } from "@heroui/spinner";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -14,17 +14,14 @@ export default async function Page({
 }: {
   params: Promise<{ collection: string }>;
 }) {
-  const { collection } = await params;
+  const { collection: collectionId } = await params;
 
-  if (collection === "") {
-    notFound();
-  }
-  const allCollections = await getCollectionNames();
-  if (!allCollections.includes(collection)) {
+  if (collectionId === "") {
     notFound();
   }
 
-  const itemsPromise = getCollectionItems(collection);
+  const itemsPromise = getCollectionItems(collectionId);
+  const collectionName = await getCollectionNameFromId(collectionId);
   const session = await auth();
 
   if (!session) {
@@ -37,7 +34,7 @@ export default async function Page({
         <Link href="/" className="my-auto ml-4 w-min">
           <BackArrowIcon />
         </Link>
-        <p className="text-center font-bold py-2 text-2xl">{collection}</p>
+        <p className="text-center font-bold py-2 text-2xl">{collectionName}</p>
       </header>
       <ConfirmDeleteModal />
       <NewItemModal />
@@ -51,8 +48,8 @@ export default async function Page({
         <ItemList
           itemsPromise={itemsPromise}
           hasNewItemTile={false}
-          collectionsPromise={null}
-          collectionName={collection}
+          collectionsDataPromise={null}
+          collectionId={collectionId}
         />
       </Suspense>
     </>

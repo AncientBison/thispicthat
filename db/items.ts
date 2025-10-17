@@ -3,17 +3,12 @@
 import sharp from "sharp";
 import db from "@/db";
 import { items } from "@/db/schema";
-import { auth } from "@/auth";
 import env from "@/env";
 import { and, eq } from "drizzle-orm";
+import { getUserIdOrThrow } from "@/db/user";
 
 export async function createItemEntry(item: { name: string; image: File }) {
-  const session = await auth();
-  const userId = session?.user?.id;
-
-  if (!userId) {
-    throw new Error("User not authenticated");
-  }
+  const userId = await getUserIdOrThrow();
 
   const buffer = Buffer.from(await item.image.arrayBuffer());
 
@@ -47,9 +42,7 @@ export async function createItemEntry(item: { name: string; image: File }) {
 }
 
 export async function deleteItemEntry(itemId: string) {
-  const session = await auth();
-
-  const userId = session?.user?.id;
+  const userId = await getUserIdOrThrow();
 
   if (!userId) {
     throw new Error("User not authenticated");
@@ -73,13 +66,7 @@ export async function deleteItemEntry(itemId: string) {
 }
 
 export async function getItems() {
-  const session = await auth();
-
-  const userId = session?.user?.id;
-
-  if (!userId) {
-    throw new Error("User not authenticated");
-  }
+  const userId = await getUserIdOrThrow();
 
   const items = await db.query.items.findMany({
     where: (items, { eq }) => eq(items.userId, userId),
@@ -91,4 +78,26 @@ export async function getItems() {
     image: item.image.toString("base64"),
     id: item.id,
   }));
+}
+
+export async function getItemsImages(itemIds: string[]) {
+  const uniqueIds = Array.from(new Set(itemIds));
+
+  const imageRows =
+    uniqueIds.length > 0
+      ? await db.query.items.findMany({
+          where: (item, { or, eq }) =>
+            or(...uniqueIds.map((id) => eq(item.id, id))),
+          columns: { id: true, image: true },
+        })
+      : [];
+
+  return new Map(
+    imageRows.map((r) => [
+      r.id,
+      typeof r.image === "string"
+        ? r.image
+        : Buffer.from(r.image as any).toString("base64"),
+    ])
+  );
 }

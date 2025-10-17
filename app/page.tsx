@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal";
 import ItemList from "@/components/itemList";
 import NewItemModal from "@/components/newItemModal";
-import { getCollections } from "@/db/collections";
+import { getCollectionsData } from "@/db/collections";
 import { getItems } from "@/db/items";
 import { Spinner } from "@heroui/spinner";
 import { redirect } from "next/navigation";
@@ -10,7 +10,7 @@ import { Suspense } from "react";
 
 export default async function Home() {
   const itemsPromise = getItems();
-  const collectionsPromise = getCollections();
+  const collectionsDataPromise = getCollectionsData();
   const session = await auth();
 
   if (!session) {
@@ -28,7 +28,10 @@ export default async function Home() {
           </div>
         }
       >
-        <ItemList itemsPromise={itemsPromise} collectionsPromise={collectionsPromise} />
+        <ItemList
+          itemsPromise={itemsPromise}
+          collectionsDataPromise={collectionsDataPromise}
+        />
       </Suspense>
     </>
   );

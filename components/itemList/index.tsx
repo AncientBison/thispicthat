@@ -12,25 +12,29 @@ import StudyTile from "@/components/itemList/studyTile";
 
 export default function ItemList({
   itemsPromise,
-  collectionsPromise,
+  collectionsDataPromise,
   hasNewItemTile = true,
-  collectionName
+  collectionId,
 }: {
   itemsPromise: Promise<{ name: string; image: string; id: string }[]>;
-  collectionsPromise: Promise<
+  collectionsDataPromise: Promise<
     {
       items: { name: string; image: string; id: string }[];
       name: string;
+      id: string;
     }[]
   > | null;
   hasNewItemTile?: boolean;
-  collectionName?: string;
+  collectionId?: string;
 }) {
   const initialItems = use(itemsPromise);
-  const collections =
-    collectionsPromise === null ? [] : use(collectionsPromise);
 
-  useHydrateAtoms([[itemsAtom, initialItems]]);
+  const collections =
+    collectionsDataPromise === null ? [] : use(collectionsDataPromise);
+
+  useHydrateAtoms([[itemsAtom, initialItems]], {
+    dangerouslyForceHydrate: true,
+  });
 
   const items = useAtomValue(itemsAtom);
 
@@ -44,14 +48,15 @@ export default function ItemList({
       }}
       className="mx-auto p-4 max-w-6xl"
       items={(hasNewItemTile
-        ? [<NewItemTile />, <StudyTile collectionName={collectionName} />]
-        : [<StudyTile collectionName={collectionName} />]
+        ? [<NewItemTile />, <StudyTile collectionId={collectionId} />]
+        : [<StudyTile collectionId={collectionId} />]
       )
         .concat(
           collections.map((collection) => (
             <ItemCollectionTile
               items={collection.items}
               name={collection.name}
+              id={collection.id}
               key={collection.name}
             />
           ))

@@ -8,10 +8,10 @@ import { Progress } from "@heroui/progress";
 
 export default function Study({
   itemsPromise,
-  collectionName,
+  collection,
 }: {
   itemsPromise: Promise<{ name: string; image: string; id: string }[]>;
-  collectionName?: string;
+  collection?: { id: string; name: string };
 }) {
   const items = use(itemsPromise);
 
@@ -50,7 +50,7 @@ export default function Study({
     return (
       <StudyCompletion
         incorrectItems={incorrectItems}
-        collectionName={collectionName}
+        collection={collection}
       />
     );
   }

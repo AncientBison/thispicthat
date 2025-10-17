@@ -2,27 +2,15 @@
 
 import { Card, CardBody } from "@heroui/card";
 import { BookIcon } from "@/components/icons";
-import { useSetAtom } from "jotai";
-import { newItemModalOpenAtom, itemNameAtom, itemImageAtom } from "@/atoms";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-export default function StudyTile({
-  collectionName,
-}: {
-  collectionName?: string;
-}) {
-  const setNewItemModalOpen = useSetAtom(newItemModalOpenAtom);
-  const setItemName = useSetAtom(itemNameAtom);
-  const setItemImage = useSetAtom(itemImageAtom);
-
+export default function StudyTile({ collectionId }: { collectionId?: string }) {
   const t = useTranslations("ItemList");
 
   return (
     <Link
-      href={
-        collectionName === undefined ? "/study" : `/study/${collectionName}`
-      }
+      href={collectionId === undefined ? "/study" : `/study/${collectionId}`}
     >
       <Card
         shadow="md"

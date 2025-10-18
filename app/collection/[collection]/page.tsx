@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal";
+import RemoveItemFromCollectionModal from "@/components/removeItemFromCollectionModal";
 import { BackArrowIcon } from "@/components/icons";
 import ItemList from "@/components/itemList";
 import { getItems } from "@/db/items";
@@ -39,6 +40,7 @@ export default async function Page({
         <p className="text-center font-bold py-2 text-2xl">{collectionName}</p>
       </header>
       <ConfirmDeleteModal />
+  <RemoveItemFromCollectionModal />
       <NewItemModal />
       <Suspense
         fallback={

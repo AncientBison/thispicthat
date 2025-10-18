@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal";
+import RemoveItemFromCollectionModal from "@/components/removeItemFromCollectionModal";
 import ItemList from "@/components/itemList";
 import NewItemModal from "@/components/newItemModal";
 import { getCollectionsData } from "@/db/collections";
@@ -19,7 +20,8 @@ export default async function Home() {
 
   return (
     <>
-      <ConfirmDeleteModal />
+  <ConfirmDeleteModal />
+  <RemoveItemFromCollectionModal />
       <NewItemModal />
       <Suspense
         fallback={

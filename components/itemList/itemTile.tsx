@@ -2,22 +2,37 @@
 
 import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { TrashIcon } from "@/components/icons";
+import { RemoveStackIcon, TrashIcon } from "@/components/icons";
 import { Button } from "@heroui/button";
 import { useSetAtom } from "jotai";
-import { confirmDeleteModalOpenAtom, itemToDeleteAtom } from "@/atoms";
+import {
+  confirmDeleteModalOpenAtom,
+  itemToDeleteAtom,
+  removeItemFromCollectionModalOpenAtom,
+  itemToRemoveFromCollectionAtom,
+} from "@/atoms";
 
 export default function ItemTile({
   name,
   image,
   id,
+  actionData,
 }: {
   name: string;
   image: string;
   id: string;
+  actionData:
+    | { type: "delete" }
+    | { type: "removeFromCollection"; collectionId: string };
 }) {
   const setConfirmDeleteModalOpen = useSetAtom(confirmDeleteModalOpenAtom);
   const setItemToDelete = useSetAtom(itemToDeleteAtom);
+  const setRemoveItemFromCollectionModalOpen = useSetAtom(
+    removeItemFromCollectionModalOpenAtom
+  );
+  const setItemToRemoveFromCollection = useSetAtom(
+    itemToRemoveFromCollectionAtom
+  );
 
   return (
     <Card key={name} shadow="md" className="break-inside-avoid">
@@ -33,17 +48,35 @@ export default function ItemTile({
       </CardBody>
       <CardFooter className="flex justify-between">
         <span className="font-semibold">{name}</span>
-        <Button
-          isIconOnly
-          variant="light"
-          color="danger"
-          onPress={() => {
-            setConfirmDeleteModalOpen(true);
-            setItemToDelete({ id, name });
-          }}
-        >
-          <TrashIcon />
-        </Button>
+        {actionData.type === "delete" ? (
+          <Button
+            isIconOnly
+            variant="light"
+            color="danger"
+            onPress={() => {
+              setConfirmDeleteModalOpen(true);
+              setItemToDelete({ id, name });
+            }}
+          >
+            <TrashIcon />
+          </Button>
+        ) : (
+          <Button
+            isIconOnly
+            variant="light"
+            color="warning"
+            onPress={() => {
+              setRemoveItemFromCollectionModalOpen(true);
+              setItemToRemoveFromCollection({
+                id,
+                name,
+                collectionId: actionData.collectionId,
+              });
+            }}
+          >
+            <RemoveStackIcon />
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

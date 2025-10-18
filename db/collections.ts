@@ -4,7 +4,7 @@ import db from "@/db";
 import { getUserIdOrThrow } from "@/db/user";
 import { getItemsImages } from "@/db/items";
 import { collectionItems } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 async function mapItemsWithImages(
   collectionItems: { item: { id: string; name: string } }[]
@@ -129,5 +129,34 @@ export async function setCollectionItems(
   } catch (error) {
     console.error("Failed to set collection items:", error);
     throw new Error("Failed to update collection items", { cause: error });
+  }
+}
+
+export async function removeItemFromCollection(
+  collectionId: string,
+  itemId: string
+) {
+  const userId = await getUserIdOrThrow();
+
+  const collection = await db.query.collections.findFirst({
+    where: (c, { and, eq }) =>
+      and(eq(c.id, collectionId), eq(c.userId, userId)),
+    columns: { id: true },
+  });
+
+  if (!collection) {
+    throw new Error(
+      "Collection not found or you do not have permission to access it"
+    );
+  }
+
+  try {
+    await db
+      .delete(collectionItems)
+      .where(and(eq(collectionItems.collectionId, collectionId),
+             eq(collectionItems.itemId, itemId)));
+  } catch (error) {
+    console.error("Failed to remove item from collection:", error);
+    throw new Error("Failed to remove item from collection", { cause: error });
   }
 }

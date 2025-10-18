@@ -7,7 +7,8 @@
   "ConfirmDeleteModal": {
     "message": "Êtes-vous sûr de vouloir supprimer <b>{item}</b>?",
     "close": "Fermer",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "deleted": "Object supprimé"
   },
   "ImageUpload": {
     "clickOrDrag": "Cliquez ou glissez-déposez une image"
@@ -21,7 +22,9 @@
   },
   "Error": {
     "errorText": "Quelque chose s'est mal passé!",
-    "tryAgain": "Essayer à nouveau"
+    "tryAgain": "Essayer à nouveau",
+    "deleteItem": "Erreur lors de la suppression de l'object",
+    "removeItem": "Erreur lors de la suppression de l'object"
   },
   "ItemList": {
     "addItem": "Ajouter un nouvel objet",
@@ -48,5 +51,11 @@
     "cancel": "Annuler",
     "save": "Sauvegarder",
     "title": "Ajouter à la collection"
+  },
+  "RemoveItemFromCollectionModal": {
+    "close": "Fermer",
+    "message": "Êtes-vous sûr de vouloir supprimer <b>{item}</b>",
+    "removed": "Object supprimé",
+    "remove": "Retirer"
   }
 }

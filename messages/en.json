@@ -7,7 +7,8 @@
   "ConfirmDeleteModal": {
     "message": "Are you sure you want to delete <b>{item}</b>?",
     "close": "Close",
-    "delete": "Delete"
+    "delete": "Delete",
+    "deleted": "Item deleted"
   },
   "ImageUpload": {
     "clickOrDrag": "Click or drag image to upload"
@@ -26,7 +27,9 @@
   },
   "Error": {
     "errorText": "Something went wrong!",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "deleteItem": "Error deleting item",
+    "removeItem": "Error removing item"
   },
   "ItemList": {
     "addItem": "Add a new item",
@@ -48,5 +51,11 @@
   },
   "ThemeSwitcher": {
     "switchMode": "Switch to {theme, select, dark {dark} light {light} other {}} mode"
+  },
+  "RemoveItemFromCollectionModal": {
+    "remove": "Remove",
+    "removed": "Item removed",
+    "message": "Are you sure you want to remove <b>{item}</b>",
+    "close": "Close"
   }
 }

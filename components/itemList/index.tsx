@@ -71,7 +71,7 @@ export default function ItemList({
     />
   ));
   const itemTiles = items.map((item) => (
-    <ItemTile key={item.id} name={item.name} image={item.image} id={item.id} />
+    <ItemTile key={item.id} name={item.name} image={item.image} id={item.id} actionData={collection !== undefined ? { type: "removeFromCollection", collectionId: collection.id } : { type: "delete" }} />
   ));
 
   const masonryItems = [...baseTiles, ...collectionTiles, ...itemTiles];

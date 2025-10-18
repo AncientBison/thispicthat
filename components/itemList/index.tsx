@@ -2,21 +2,23 @@
 
 import { itemsAtom } from "@/atoms";
 import ItemTile from "@/components/itemList/itemTile";
-import { useAtomValue } from "jotai";
-import { useHydrateAtoms } from "jotai/utils";
-import { use } from "react";
+import { useAtom } from "jotai";
+import { use, useEffect } from "react";
 import NewItemTile from "@/components/itemList/newItemTile";
 import ItemCollectionTile from "@/components/itemList/itemCollectionTile";
 import { Masonry } from "react-plock";
 import StudyTile from "@/components/itemList/studyTile";
+import CollectionAddTile from "@/components/itemList/collectionAddTile";
 
 export default function ItemList({
   itemsPromise,
+  allItemsPromise,
   collectionsDataPromise,
   hasNewItemTile = true,
-  collectionId,
+  collection,
 }: {
   itemsPromise: Promise<{ name: string; image: string; id: string }[]>;
+  allItemsPromise: Promise<{ name: string; image: string; id: string }[]>;
   collectionsDataPromise: Promise<
     {
       items: { name: string; image: string; id: string }[];
@@ -25,18 +27,54 @@ export default function ItemList({
     }[]
   > | null;
   hasNewItemTile?: boolean;
-  collectionId?: string;
+  hasCollectionAddTile?: boolean;
+  collection?: { id: string; name: string };
 }) {
   const initialItems = use(itemsPromise);
 
   const collections =
     collectionsDataPromise === null ? [] : use(collectionsDataPromise);
 
-  useHydrateAtoms([[itemsAtom, initialItems]], {
-    dangerouslyForceHydrate: true,
-  });
+  const [items, setItems] = useAtom(itemsAtom);
 
-  const items = useAtomValue(itemsAtom);
+  useEffect(() => {
+    if (initialItems) {
+      setItems(initialItems);
+    }
+  }, [initialItems]);
+
+  const baseTiles: React.ReactNode[] = [];
+
+  if (hasNewItemTile) {
+    baseTiles.push(<NewItemTile key="new-item" />);
+  }
+
+  baseTiles.push(<StudyTile key="study-tile" collectionId={collection?.id} />);
+
+  if (collection !== undefined) {
+    baseTiles.push(
+      <CollectionAddTile
+        key={`collection-add-${collection.id}`}
+        collection={collection}
+        collectionItems={items}
+        allItemsPromise={allItemsPromise}
+      />
+    );
+  }
+
+  const collectionTiles = collections.map((collection) => (
+    <ItemCollectionTile
+      key={collection.id}
+      items={collection.items}
+      name={collection.name}
+      id={collection.id}
+    />
+  ));
+  const itemTiles = items.map((item) => (
+    <ItemTile key={item.id} name={item.name} image={item.image} id={item.id} />
+  ));
+
+  const masonryItems = [...baseTiles, ...collectionTiles, ...itemTiles];
 
   return (
     <Masonry
@@ -47,33 +85,8 @@ export default function ItemList({
         useBalancedLayout: false,
       }}
       className="mx-auto p-4 max-w-6xl"
-      items={(hasNewItemTile
-        ? [<NewItemTile />, <StudyTile collectionId={collectionId} />]
-        : [<StudyTile collectionId={collectionId} />]
-      )
-        .concat(
-          collections.map((collection) => (
-            <ItemCollectionTile
-              items={collection.items}
-              name={collection.name}
-              id={collection.id}
-              key={collection.name}
-            />
-          ))
-        )
-        .concat(
-          items.map((item) => (
-            <ItemTile
-              key={item.id}
-              name={item.name}
-              image={item.image}
-              id={item.id}
-            />
-          ))
-        )}
-      render={(item) => {
-        return item;
-      }}
+      items={masonryItems}
+      render={(item) => item}
     />
   );
 }

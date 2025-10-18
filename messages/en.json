@@ -19,13 +19,19 @@
     "errorCreatingItem": "Error creating item",
     "create": "Create"
   },
+  "CollectionAddModal": {
+    "title": "Add to collection",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
   "Error": {
     "errorText": "Something went wrong!",
     "tryAgain": "Try again"
   },
   "ItemList": {
     "addItem": "Add a new item",
-    "study": "Study"
+    "study": "Study",
+    "collectionAdd": "Add an item"
   },
   "Study": {
     "title": "Studying {collection, select, _ {your items} other {<b>{collection}</b>}}",

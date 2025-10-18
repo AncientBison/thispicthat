@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal";
 import { BackArrowIcon } from "@/components/icons";
 import ItemList from "@/components/itemList";
+import { getItems } from "@/db/items";
 import NewItemModal from "@/components/newItemModal";
 import { getCollectionItems, getCollectionNameFromId } from "@/db/collections";
 import { Spinner } from "@heroui/spinner";
@@ -23,6 +24,7 @@ export default async function Page({
   const itemsPromise = getCollectionItems(collectionId);
   const collectionName = await getCollectionNameFromId(collectionId);
   const session = await auth();
+  const allItemsPromise = getItems();
 
   if (!session) {
     redirect("/signin");
@@ -49,7 +51,8 @@ export default async function Page({
           itemsPromise={itemsPromise}
           hasNewItemTile={false}
           collectionsDataPromise={null}
-          collectionId={collectionId}
+          collection={{ id: collectionId, name: collectionName }}
+          allItemsPromise={allItemsPromise}
         />
       </Suspense>
     </>

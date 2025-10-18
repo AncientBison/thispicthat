@@ -30,6 +30,7 @@ export default async function Home() {
       >
         <ItemList
           itemsPromise={itemsPromise}
+          allItemsPromise={itemsPromise}
           collectionsDataPromise={collectionsDataPromise}
         />
       </Suspense>

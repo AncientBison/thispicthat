@@ -25,7 +25,8 @@
   },
   "ItemList": {
     "addItem": "Ajouter un nouvel objet",
-    "study": "Étudier"
+    "study": "Étudier",
+    "collectionAdd": "Ajouter un object"
   },
   "ThemeSwitcher": {
     "switchMode": "Passer au mode {theme, select, dark {sombre} light {clair} other {}}"
@@ -42,5 +43,10 @@
     "placeholder": "Tapez le nom de l'object et appuyez sur Entrée",
     "prompt": "Qu'est-ce que c'est?",
     "title": "Étudier {collection, select, _ {vos objets} other {<b>{collection}</b>}}"
+  },
+  "CollectionAddModal": {
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "title": "Ajouter à la collection"
   }
 }

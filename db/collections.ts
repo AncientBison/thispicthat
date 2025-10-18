@@ -1,6 +1,10 @@
+"use server";
+
 import db from "@/db";
 import { getUserIdOrThrow } from "@/db/user";
 import { getItemsImages } from "@/db/items";
+import { collectionItems } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 async function mapItemsWithImages(
   collectionItems: { item: { id: string; name: string } }[]
@@ -93,4 +97,37 @@ export async function getCollectionNameFromId(collectionId: string) {
   }
 
   return collection.name;
+}
+
+export async function setCollectionItems(
+  collectionId: string,
+  itemIds: string[]
+) {
+  const userId = await getUserIdOrThrow();
+
+  const collection = await db.query.collections.findFirst({
+    where: (c, { and, eq }) =>
+      and(eq(c.id, collectionId), eq(c.userId, userId)),
+    columns: { id: true },
+  });
+
+  if (!collection) {
+    throw new Error(
+      "Collection not found or you do not have permission to access it"
+    );
+  }
+
+  try {
+    await db
+      .delete(collectionItems)
+      .where(eq(collectionItems.collectionId, collectionId));
+
+    const rows = itemIds.map((itemId) => ({ collectionId, itemId }));
+    await db.insert(collectionItems).values(rows);
+
+    return await getCollectionItems(collectionId);
+  } catch (error) {
+    console.error("Failed to set collection items:", error);
+    throw new Error("Failed to update collection items", { cause: error });
+  }
 }

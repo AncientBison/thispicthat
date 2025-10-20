@@ -3,7 +3,7 @@
 import db from "@/db";
 import { getUserIdOrThrow } from "@/db/user";
 import { getItemsImages } from "@/db/items";
-import { collectionItems } from "@/db/schema";
+import { collectionItems, collections } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
 async function mapItemsWithImages(
@@ -153,10 +153,31 @@ export async function removeItemFromCollection(
   try {
     await db
       .delete(collectionItems)
-      .where(and(eq(collectionItems.collectionId, collectionId),
-             eq(collectionItems.itemId, itemId)));
+      .where(
+        and(
+          eq(collectionItems.collectionId, collectionId),
+          eq(collectionItems.itemId, itemId)
+        )
+      );
   } catch (error) {
     console.error("Failed to remove item from collection:", error);
     throw new Error("Failed to remove item from collection", { cause: error });
+  }
+}
+
+export async function createCollection(name: string) {
+  const userId = await getUserIdOrThrow();
+
+  try {
+    const result = await db
+      .insert(collections)
+      .values({ name, userId })
+      .returning({ id: collections.id, name: collections.name });
+
+    const created = result[0];
+    return { id: created.id, name: created.name };
+  } catch (error) {
+    console.error("Failed to create collection:", error);
+    throw new Error("Failed to create collection", { cause: error });
   }
 }

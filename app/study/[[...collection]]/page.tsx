@@ -3,6 +3,7 @@ import { BackArrowIcon } from "@/components/icons";
 import Study from "@/components/study/study";
 import { getCollectionItems, getCollectionNameFromId } from "@/db/collections";
 import { getItems } from "@/db/items";
+import { getUserSettings } from "@/db/user";
 import { Spinner } from "@heroui/spinner";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
@@ -28,6 +29,12 @@ export default async function Page({
 
   if (!session) {
     redirect("/signin");
+  }
+
+  try {
+    await getUserSettings();
+  } catch (error) {
+    redirect("/welcome");
   }
 
   return (

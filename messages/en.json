@@ -4,6 +4,11 @@
     "prompt": "Please sign in to start your journey.",
     "button": "Sign In"
   },
+  "Welcome": {
+    "title": "Welcome to ThisPicThat!",
+    "continue": "Continue",
+    "nativeLanguage": "Native language"
+  },
   "ConfirmDeleteModal": {
     "message": "Are you sure you want to delete <b>{item}</b>?",
     "close": "Close",
@@ -25,6 +30,12 @@
     "cancel": "Cancel",
     "save": "Save"
   },
+  "NewCollectionModal": {
+    "title": "Create collection",
+    "placeholder": "Collection name",
+    "cancel": "Cancel",
+    "create": "Create"
+  },
   "Error": {
     "errorText": "Something went wrong!",
     "tryAgain": "Try again",
@@ -34,7 +45,8 @@
   "ItemList": {
     "addItem": "Add a new item",
     "study": "Study",
-    "collectionAdd": "Add an item"
+    "collectionAdd": "Add an item",
+    "newCollection": "New collection"
   },
   "Study": {
     "title": "Studying {collection, select, _ {your items} other {<b>{collection}</b>}}",

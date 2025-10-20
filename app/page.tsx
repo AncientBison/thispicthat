@@ -8,6 +8,8 @@ import { getItems } from "@/db/items";
 import { Spinner } from "@heroui/spinner";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import NewCollectionModal from "@/components/newCollectionModal";
+import { getUserSettings } from "@/db/user";
 
 export default async function Home() {
   const itemsPromise = getItems();
@@ -18,11 +20,18 @@ export default async function Home() {
     redirect("/signin");
   }
 
+  try {
+    await getUserSettings();
+  } catch (error) {
+    redirect("/welcome");
+  }
+
   return (
     <>
-  <ConfirmDeleteModal />
-  <RemoveItemFromCollectionModal />
+      <ConfirmDeleteModal />
+      <RemoveItemFromCollectionModal />
       <NewItemModal />
+      <NewCollectionModal />
       <Suspense
         fallback={
           <div className="flex justify-center items-center w-full min-h-screen">

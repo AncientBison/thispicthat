@@ -29,7 +29,8 @@
   "ItemList": {
     "addItem": "Ajouter un nouvel objet",
     "study": "Étudier",
-    "collectionAdd": "Ajouter un object"
+    "collectionAdd": "Ajouter un object",
+    "newCollection": "Nouvelle collection"
   },
   "ThemeSwitcher": {
     "switchMode": "Passer au mode {theme, select, dark {sombre} light {clair} other {}}"
@@ -52,10 +53,21 @@
     "save": "Sauvegarder",
     "title": "Ajouter à la collection"
   },
+  "NewCollectionModal": {
+    "title": "Créer une collection",
+    "placeholder": "Nom de la collection",
+    "cancel": "Annuler",
+    "create": "Créer"
+  },
   "RemoveItemFromCollectionModal": {
     "close": "Fermer",
     "message": "Êtes-vous sûr de vouloir supprimer <b>{item}</b>",
     "removed": "Object supprimé",
     "remove": "Retirer"
+  },
+  "Welcome": {
+    "nativeLanguage": "Langue maternelle",
+    "title": "Bienvenue sur TofDeÇa!",
+    "continue": "Continuer"
   }
 }

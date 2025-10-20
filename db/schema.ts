@@ -6,9 +6,13 @@ import {
   primaryKey,
   integer,
   customType,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
+import { locales } from "@/i18n/config";
+
+export const language = pgEnum("language", locales);
 
 export const image = customType<{
   data: Buffer;
@@ -90,6 +94,14 @@ export const collectionItemsRelations = relations(
     }),
   })
 );
+
+export const userSettings = pgTable("userSettings", {
+  userId: text("userId")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  nativeLanguage: language("nativeLanguage"),
+  learningLanguage: language("learningLanguage"),
+});
 
 export const users = pgTable("user", {
   id: text("id")

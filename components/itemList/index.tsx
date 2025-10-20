@@ -1,20 +1,22 @@
 "use client";
 
-import { itemsAtom } from "@/atoms";
+import { itemsAtom, collectionsAtom } from "@/atoms";
 import ItemTile from "@/components/itemList/itemTile";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { use, useEffect } from "react";
 import NewItemTile from "@/components/itemList/newItemTile";
 import ItemCollectionTile from "@/components/itemList/itemCollectionTile";
 import { Masonry } from "react-plock";
 import StudyTile from "@/components/itemList/studyTile";
 import CollectionAddTile from "@/components/itemList/collectionAddTile";
+import NewCollectionTile from "@/components/itemList/newCollectionTile";
 
 export default function ItemList({
   itemsPromise,
   allItemsPromise,
   collectionsDataPromise,
   hasNewItemTile = true,
+  hasNewCollectionTile = true,
   collection,
 }: {
   itemsPromise: Promise<{ name: string; image: string; id: string }[]>;
@@ -28,20 +30,28 @@ export default function ItemList({
   > | null;
   hasNewItemTile?: boolean;
   hasCollectionAddTile?: boolean;
+  hasNewCollectionTile?: boolean;
   collection?: { id: string; name: string };
 }) {
   const initialItems = use(itemsPromise);
-
-  const collections =
+  const initialCollections =
     collectionsDataPromise === null ? [] : use(collectionsDataPromise);
+
+  const [collections, setCollectionsAtom] = useAtom(collectionsAtom);
+
+  useEffect(() => {
+    setCollectionsAtom((prev) =>
+      JSON.stringify(prev || []) === JSON.stringify(initialCollections || [])
+        ? prev
+        : initialCollections
+    );
+  }, [initialCollections, setCollectionsAtom]);
 
   const [items, setItems] = useAtom(itemsAtom);
 
   useEffect(() => {
-    if (initialItems) {
-      setItems(initialItems);
-    }
-  }, [initialItems]);
+    setItems(initialItems);
+  }, [initialItems, setItems]);
 
   const baseTiles: React.ReactNode[] = [];
 
@@ -50,6 +60,10 @@ export default function ItemList({
   }
 
   baseTiles.push(<StudyTile key="study-tile" collectionId={collection?.id} />);
+
+  if (hasNewCollectionTile) {
+    baseTiles.push(<NewCollectionTile key="new-collection" />);
+  }
 
   if (collection !== undefined) {
     baseTiles.push(
@@ -71,7 +85,17 @@ export default function ItemList({
     />
   ));
   const itemTiles = items.map((item) => (
-    <ItemTile key={item.id} name={item.name} image={item.image} id={item.id} actionData={collection !== undefined ? { type: "removeFromCollection", collectionId: collection.id } : { type: "delete" }} />
+    <ItemTile
+      key={item.id}
+      name={item.name}
+      image={item.image}
+      id={item.id}
+      actionData={
+        collection !== undefined
+          ? { type: "removeFromCollection", collectionId: collection.id }
+          : { type: "delete" }
+      }
+    />
   ));
 
   const masonryItems = [...baseTiles, ...collectionTiles, ...itemTiles];

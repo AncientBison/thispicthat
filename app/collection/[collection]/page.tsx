@@ -10,6 +10,7 @@ import { Spinner } from "@heroui/spinner";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
+import { getUserSettings } from "@/db/user";
 
 export default async function Page({
   params,
@@ -31,6 +32,12 @@ export default async function Page({
     redirect("/signin");
   }
 
+  try {
+    await getUserSettings();
+  } catch (error) {
+    redirect("/welcome");
+  }
+
   return (
     <>
       <header className="bg-neutral-300 dark:bg-neutral-700 grid grid-cols-[1fr_8fr_1fr] sticky">
@@ -40,7 +47,7 @@ export default async function Page({
         <p className="text-center font-bold py-2 text-2xl">{collectionName}</p>
       </header>
       <ConfirmDeleteModal />
-  <RemoveItemFromCollectionModal />
+      <RemoveItemFromCollectionModal />
       <NewItemModal />
       <Suspense
         fallback={
@@ -52,6 +59,7 @@ export default async function Page({
         <ItemList
           itemsPromise={itemsPromise}
           hasNewItemTile={false}
+          hasNewCollectionTile={false}
           collectionsDataPromise={null}
           collection={{ id: collectionId, name: collectionName }}
           allItemsPromise={allItemsPromise}

@@ -26,7 +26,7 @@ export default function StudyCard({
   return (
     <div className="w-full bg-neutral-100 dark:bg-neutral-800 shadow rounded p-4">
       <div className="flex justify-center">
-        <Image src={`data:image/webp;base64,${item.image}`} alt={item.name} />
+        <Image src={`data:image/webp;base64,${item.image}`} alt={item.name} className="max-h-[calc(100vh_-_20rem)]" />
       </div>
 
       <Form

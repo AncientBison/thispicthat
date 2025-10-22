@@ -9,7 +9,9 @@ import { and, eq } from "drizzle-orm";
 async function mapItemsWithImages(
   collectionItems: { item: { id: string; name: string } }[]
 ) {
-  const itemIds = Array.from(new Set(collectionItems.map((ci) => ci.item.id)));
+  const itemIds = Array.from(
+    new Set(collectionItems.map((collectionItem) => collectionItem.item.id))
+  );
   const imageMap = await getItemsImages(itemIds);
 
   return collectionItems.map(({ item }) => {
@@ -26,11 +28,11 @@ export async function getCollectionsData() {
   const userId = await getUserIdOrThrow();
 
   const collections = await db.query.collections.findMany({
-    where: (c, { eq }) => eq(c.userId, userId),
-    orderBy: (c, { desc }) => desc(c.createdAt),
+    where: (collection, { eq, or, isNull }) =>
+      or(eq(collection.userId, userId), isNull(collection.userId)),
+    orderBy: (collection, { desc }) => desc(collection.createdAt),
     with: {
       collectionItems: {
-        limit: 4,
         with: {
           item: {
             columns: { id: true, name: true, image: false },
@@ -40,9 +42,13 @@ export async function getCollectionsData() {
     },
   });
 
-  const allCollectionItems = collections.flatMap((c) => c.collectionItems);
+  const allCollectionItems = collections.flatMap(
+    (collection) => collection.collectionItems
+  );
   const allItemsWithImages = await mapItemsWithImages(allCollectionItems);
-  const imageMap = new Map(allItemsWithImages.map((i) => [i.id, i.image]));
+  const imageMap = new Map(
+    allItemsWithImages.map((item) => [item.id, item.image])
+  );
 
   return collections.map((collection) => ({
     id: collection.id,
@@ -59,8 +65,11 @@ export async function getCollectionItems(collectionId: string) {
   const userId = await getUserIdOrThrow();
 
   const collection = await db.query.collections.findFirst({
-    where: (c, { and, eq }) =>
-      and(eq(c.id, collectionId), eq(c.userId, userId)),
+    where: (collection, { and, or, eq, isNull }) =>
+      and(
+        eq(collection.id, collectionId),
+        or(eq(collection.userId, userId), isNull(collection.userId))
+      ),
     with: {
       collectionItems: {
         with: {
@@ -85,8 +94,11 @@ export async function getCollectionNameFromId(collectionId: string) {
   const userId = await getUserIdOrThrow();
 
   const collection = await db.query.collections.findFirst({
-    where: (c, { and, eq }) =>
-      and(eq(c.id, collectionId), eq(c.userId, userId)),
+    where: (collection, { and, eq, or, isNull }) =>
+      and(
+        eq(collection.id, collectionId),
+        or(eq(collection.userId, userId), isNull(collection.userId))
+      ),
     columns: { name: true },
   });
 
@@ -106,8 +118,8 @@ export async function setCollectionItems(
   const userId = await getUserIdOrThrow();
 
   const collection = await db.query.collections.findFirst({
-    where: (c, { and, eq }) =>
-      and(eq(c.id, collectionId), eq(c.userId, userId)),
+    where: (collection, { and, eq }) =>
+      and(eq(collection.id, collectionId), eq(collection.userId, userId)),
     columns: { id: true },
   });
 
@@ -139,8 +151,8 @@ export async function removeItemFromCollection(
   const userId = await getUserIdOrThrow();
 
   const collection = await db.query.collections.findFirst({
-    where: (c, { and, eq }) =>
-      and(eq(c.id, collectionId), eq(c.userId, userId)),
+    where: (collection, { and, eq }) =>
+      and(eq(collection.id, collectionId), eq(collection.userId, userId)),
     columns: { id: true },
   });
 

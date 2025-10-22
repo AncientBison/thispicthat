@@ -6,11 +6,11 @@ import clsx from "clsx";
 import Link from "next/link";
 
 export default function ItemCollectionTile({
-  items,
+  previewItems,
   name,
   id,
 }: {
-  items: {
+  previewItems: {
     image: string;
   }[];
   name: string;
@@ -21,25 +21,28 @@ export default function ItemCollectionTile({
       <Card
         shadow="md"
         className={clsx(
-          "break-inside-avoid hover:scale-[102%] group cursor-pointer w-full",
-          items.length === 2 && "aspect-square"
+          "break-inside-avoid hover:scale-[102%] group cursor-pointer w-full max-h-screen",
+          previewItems.length === 2 && "aspect-square"
         )}
         isPressable
       >
         <CardBody
           className={clsx(
             "overflow-visible p-2 grid gap-2 rounded-b-none",
-            items.length === 1 && "grid-cols-1",
-            items.length === 2 && "grid-cols-2 grid-rows-2",
-            items.length >= 3 && "grid-cols-2 grid-rows-2"
+            previewItems.length === 1 && "grid-cols-1",
+            previewItems.length === 2 && "grid-cols-2 grid-rows-2",
+            previewItems.length >= 3 && "grid-cols-2 grid-rows-2"
           )}
         >
-          {items.slice(0, 4).map(({ image }, i) => (
+          {previewItems.slice(0, 4).map(({ image }, i) => (
             <Image
               key={name + i}
               className="object-cover w-full h-full"
               classNames={{
-                wrapper: items.length === 2 && "row-span-full",
+                wrapper: clsx(
+                  previewItems.length === 2 && "row-span-full",
+                  previewItems.length !== 2 && "aspect-square"
+                ),
               }}
               radius="none"
               shadow="sm"
@@ -50,7 +53,7 @@ export default function ItemCollectionTile({
         </CardBody>
         <CardFooter className="flex justify-between">
           <span className="font-semibold group-hover:underline">{name}</span>
-          <span className="text-neutral-500">{items.length} items</span>
+          <span className="text-neutral-500">{previewItems.length} items</span>
         </CardFooter>
       </Card>
     </Link>

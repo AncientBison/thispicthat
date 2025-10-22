@@ -38,7 +38,7 @@ export default async function Page({
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col">
       <header className="bg-default-300/50 grid grid-cols-[1fr_8fr_1fr] sticky">
         <Link href="/" className="my-auto ml-4 w-min">
           <BackArrowIcon />

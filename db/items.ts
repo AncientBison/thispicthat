@@ -69,7 +69,8 @@ export async function getItems() {
   const userId = await getUserIdOrThrow();
 
   const items = await db.query.items.findMany({
-    where: (items, { eq }) => eq(items.userId, userId),
+    where: (items, { eq, or, isNull }) =>
+      or(eq(items.userId, userId), isNull(items.userId)),
     orderBy: (items, { desc }) => desc(items.createdAt),
   });
 

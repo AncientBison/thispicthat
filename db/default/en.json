@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Furniture",
+    "items": [
+      { "name": "Chair", "fileName": "chair" },
+      { "name": "Table", "fileName": "table" },
+      { "name": "Sofa", "fileName": "sofa" },
+      { "name": "Bed", "fileName": "bed" },
+      { "name": "Desk", "fileName": "desk" },
+      { "name": "Cabinet", "fileName": "cabinet" },
+      { "name": "Wardrobe", "fileName": "wardrobe" },
+      { "name": "Alarm Clock", "fileName": "alarm_clock" },
+      { "name": "Lamp", "fileName": "lamp" },
+      { "name": "Bookshelf", "fileName": "bookshelf" }
+    ]
+  },
+  {
+    "name": "Vehicles",
+    "items": [
+      { "name": "Car", "fileName": "car" },
+      { "name": "Bicycle", "fileName": "bicycle" },
+      { "name": "Motorcycle", "fileName": "motorcycle" },
+      { "name": "Airplane", "fileName": "airplane" },
+      { "name": "Boat", "fileName": "boat" },
+      { "name": "Bus", "fileName": "bus" },
+      { "name": "Train", "fileName": "train" },
+      { "name": "Truck", "fileName": "truck" },
+      { "name": "Scooter", "fileName": "scooter" },
+      { "name": "Helicopter", "fileName": "helicopter" }
+    ]
+  },
+  {
+    "name": "Instruments",
+    "items": [
+      { "name": "Guitar", "fileName": "guitar" },
+      { "name": "Piano", "fileName": "piano" },
+      { "name": "Drums", "fileName": "drums" },
+      { "name": "Violin", "fileName": "violin" },
+      { "name": "Flute", "fileName": "flute" },
+      { "name": "Trumpet", "fileName": "trumpet" },
+      { "name": "Saxophone", "fileName": "saxophone" },
+      { "name": "Cello", "fileName": "cello" },
+      { "name": "Harp", "fileName": "harp" },
+      { "name": "Accordion", "fileName": "accordion" }
+    ]
+  }
+]

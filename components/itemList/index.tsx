@@ -2,7 +2,7 @@
 
 import { itemsAtom, collectionsAtom } from "@/atoms";
 import ItemTile from "@/components/itemList/itemTile";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { use, useEffect } from "react";
 import NewItemTile from "@/components/itemList/newItemTile";
 import ItemCollectionTile from "@/components/itemList/itemCollectionTile";
@@ -79,7 +79,7 @@ export default function ItemList({
   const collectionTiles = collections.map((collection) => (
     <ItemCollectionTile
       key={collection.id}
-      items={collection.items}
+      previewItems={collection.items}
       name={collection.name}
       id={collection.id}
     />

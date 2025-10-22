@@ -5,7 +5,6 @@ import { Providers } from "@/app/providers";
 
 import { siteConfig } from "@/config/site";
 import ThemeSwitcher from "@/components/themeSwitcher";
-import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
 export const metadata: Metadata = {

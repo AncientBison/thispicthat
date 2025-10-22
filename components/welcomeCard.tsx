@@ -46,6 +46,7 @@ export default function WelcomeCard({
       try {
         setLoading(true);
         await setUserSettings(selectedLocale, learningLanguage);
+        document.cookie = `locale=${selectedLocale}; path=/`;
         router.push("/");
       } catch (err) {
         console.error("Failed to save user settings:", err);

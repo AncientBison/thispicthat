@@ -39,6 +39,7 @@ export const collections = pgTable("collection", {
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
+  language: language("language"),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -95,8 +96,8 @@ export const userSettings = pgTable("userSettings", {
   userId: text("userId")
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
-  nativeLanguage: language("nativeLanguage"),
-  learningLanguage: language("learningLanguage"),
+  nativeLanguage: language("nativeLanguage").notNull(),
+  learningLanguage: language("learningLanguage").notNull(),
 });
 
 export const users = pgTable("user", {

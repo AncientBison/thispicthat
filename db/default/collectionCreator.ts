@@ -8,8 +8,9 @@ import {
 } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Collection } from "@/db/default/setup";
+import { Locale } from "@/i18n/config";
 
-export async function createDefaultCollections(language: string) {
+export async function createDefaultCollections(language: Locale) {
   const langPath = path.resolve(
     process.cwd(),
     "db",
@@ -23,14 +24,17 @@ export async function createDefaultCollections(language: string) {
     try {
       const insertResult = await db
         .insert(collectionsTable)
-        .values({ name: collection.name, userId: null })
+        .values({ name: collection.name, userId: null, language })
         .returning({ id: collectionsTable.id, name: collectionsTable.name });
 
       const created = insertResult[0];
 
       const itemNames = collection.items.map((item) => item.name);
       const rows = await db.query.items.findMany({
-        where: (item, { or }) => or(...itemNames.map((n) => eq(item.name, n))),
+        where: (item, { or, and, isNull }) =>
+          or(
+            ...itemNames.map((n) => and(eq(item.name, n), isNull(item.userId)))
+          ),
         columns: { id: true, name: true },
       });
 

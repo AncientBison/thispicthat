@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/db";
-import { getUserIdOrThrow } from "@/db/user";
+import { getUserIdOrThrow, getUserSettings } from "@/db/user";
 import { getItemsImages } from "@/db/items";
 import { collectionItems, collections } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
@@ -27,9 +27,17 @@ async function mapItemsWithImages(
 export async function getCollectionsData() {
   const userId = await getUserIdOrThrow();
 
+  const userLearningLanguage = (await getUserSettings()).learningLanguage;
+
   const collections = await db.query.collections.findMany({
-    where: (collection, { eq, or, isNull }) =>
-      or(eq(collection.userId, userId), isNull(collection.userId)),
+    where: (collection, { eq, or, and, isNull }) =>
+      or(
+        eq(collection.userId, userId),
+        and(
+          isNull(collection.userId),
+          eq(collection.language, userLearningLanguage)
+        )
+      ),
     orderBy: (collection, { desc }) => desc(collection.createdAt),
     with: {
       collectionItems: {
@@ -180,10 +188,12 @@ export async function removeItemFromCollection(
 export async function createCollection(name: string) {
   const userId = await getUserIdOrThrow();
 
+  const userLearningLanguage = (await getUserSettings()).learningLanguage;
+
   try {
     const result = await db
       .insert(collections)
-      .values({ name, userId })
+      .values({ name, userId, language: userLearningLanguage })
       .returning({ id: collections.id, name: collections.name });
 
     const created = result[0];

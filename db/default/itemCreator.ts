@@ -5,8 +5,9 @@ import db from "@/db";
 import { items } from "@/db/schema";
 import env from "@/env";
 import { Collection } from "@/db/default/setup";
+import { Locale } from "@/i18n/config";
 
-export async function createDefaultItems(language: string) {
+export async function createDefaultItems(language: Locale) {
   const langPath = path.resolve(
     process.cwd(),
     "db",
@@ -44,6 +45,7 @@ export async function createDefaultItems(language: string) {
           userId: null,
           name: itemData.name,
           image: processedImage,
+          language,
         });
       } catch (error) {
         console.error(

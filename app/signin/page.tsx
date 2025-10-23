@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { SignInButton } from "@/components/signInButton";
-import { getUserSettings } from "@/db/user";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
@@ -11,12 +10,6 @@ export default async function SignIn() {
 
   if (session) {
     redirect("/");
-  }
-
-  try {
-    await getUserSettings();
-  } catch (error) {
-    redirect("/welcome");
   }
 
   return (

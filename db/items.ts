@@ -5,10 +5,12 @@ import db from "@/db";
 import { items } from "@/db/schema";
 import env from "@/env";
 import { and, eq } from "drizzle-orm";
-import { getUserIdOrThrow } from "@/db/user";
+import { getUserIdOrThrow, getUserSettings } from "@/db/user";
 
 export async function createItemEntry(item: { name: string; image: File }) {
   const userId = await getUserIdOrThrow();
+
+  const userLearningLanguage = (await getUserSettings()).learningLanguage;
 
   const buffer = Buffer.from(await item.image.arrayBuffer());
 
@@ -30,6 +32,7 @@ export async function createItemEntry(item: { name: string; image: File }) {
           userId,
           name: item.name,
           image: processedImage,
+          language: userLearningLanguage,
         })
         .returning({ id: items.id })
     )[0].id;
@@ -68,9 +71,11 @@ export async function deleteItemEntry(itemId: string) {
 export async function getItems() {
   const userId = await getUserIdOrThrow();
 
+  const userLearningLanguage = (await getUserSettings()).learningLanguage
+
   const items = await db.query.items.findMany({
     where: (items, { eq, or, isNull }) =>
-      or(eq(items.userId, userId), isNull(items.userId)),
+      or(eq(items.userId, userId), and(isNull(items.userId), eq(items.language, userLearningLanguage))),
     orderBy: (items, { desc }) => desc(items.createdAt),
   });
 

@@ -13,6 +13,7 @@ export default async function Home() {
   const flags: Record<(typeof locales)[number], string> = {
     en: (await import("@/i18n/flags/us.svg")).default.src,
     fr: (await import("@/i18n/flags/fr.svg")).default.src,
+    es: (await import("@/i18n/flags/es.svg")).default.src,
   };
 
   const translations = {
@@ -23,6 +24,7 @@ export default async function Home() {
       continue: "Continue",
       en: "English",
       fr: "French",
+      es: "Spanish",
     },
     fr: {
       title: "Bienvenue",
@@ -31,6 +33,16 @@ export default async function Home() {
       continue: "Continuer",
       en: "Anglais",
       fr: "Français",
+      es: "Espagnol",
+    },
+    es: {
+      title: "Bienvenido",
+      nativeLanguage: "Idioma nativo",
+      learningLanguage: "Idioma de aprendizaje",
+      continue: "Continuar",
+      en: "Inglés",
+      fr: "Francés",
+      es: "Español",
     },
   };
 

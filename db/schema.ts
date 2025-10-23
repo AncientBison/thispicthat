@@ -56,6 +56,7 @@ export const items = pgTable("item", {
   userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   image: image("image").notNull(),
+  language: language("language"),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true })
     .notNull()
     .defaultNow(),

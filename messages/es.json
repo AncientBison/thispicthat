@@ -1,0 +1,73 @@
+{
+  "SignIn": {
+    "welcome": "¡Bienvenido a EstaPicEsa!",
+    "prompt": "Por favor, inicia sesión para comenzar tu aventura.",
+    "button": "Iniciar sesión"
+  },
+  "Welcome": {
+    "title": "¡Bienvenido a EstaPicEsa!",
+    "continue": "Continuar",
+    "nativeLanguage": "Idioma nativo"
+  },
+  "ConfirmDeleteModal": {
+    "message": "¿Estás seguro de que deseas eliminar <b>{item}</b>?",
+    "close": "Cerrar",
+    "delete": "Eliminar",
+    "deleted": "Elemento eliminado"
+  },
+  "ImageUpload": {
+    "clickOrDrag": "Haz clic o arrastra una imagen para subirla"
+  },
+  "NewItemModal": {
+    "title": "Crear nuevo elemento",
+    "itemNamePlaceholder": "Nombre del elemento",
+    "itemCreated": "Elemento creado",
+    "errorCreatingItem": "Error al crear el elemento",
+    "create": "Crear"
+  },
+  "CollectionAddModal": {
+    "title": "Agregar a la colección",
+    "cancel": "Cancelar",
+    "save": "Guardar"
+  },
+  "NewCollectionModal": {
+    "title": "Crear colección",
+    "placeholder": "Nombre de la colección",
+    "cancel": "Cancelar",
+    "create": "Crear"
+  },
+  "Error": {
+    "errorText": "¡Algo salió mal!",
+    "tryAgain": "Intentar de nuevo",
+    "deleteItem": "Error al eliminar el elemento",
+    "removeItem": "Error al quitar el elemento"
+  },
+  "ItemList": {
+    "addItem": "Agregar un nuevo elemento",
+    "study": "Estudiar",
+    "collectionAdd": "Agregar un elemento",
+    "newCollection": "Nueva colección"
+  },
+  "Study": {
+    "title": "Estudiando {collection, select, _ {tus elementos} other {<b>{collection}</b>}}",
+    "prompt": "¿Qué es esto?",
+    "placeholder": "Escribe el nombre del elemento y presiona Enter",
+    "correct": "Correcto",
+    "incorrectPrefix": "Incorrecto — respuesta correcta:",
+    "completionTitle": "¡Bien hecho!",
+    "check": "Comprobar",
+    "backToHome": "Volver al inicio",
+    "backToCollection": "Volver a {collection}",
+    "noIncorrect": "¡No tuviste ninguna respuesta incorrecta!",
+    "incorrectSummary": "Palabras para repasar:"
+  },
+  "ThemeSwitcher": {
+    "switchMode": "Cambiar al modo {theme, select, dark {oscuro} light {claro} other {}}"
+  },
+  "RemoveItemFromCollectionModal": {
+    "remove": "Quitar",
+    "removed": "Elemento quitado",
+    "message": "¿Estás seguro de que deseas quitar <b>{item}</b>?",
+    "close": "Cerrar"
+  }
+}

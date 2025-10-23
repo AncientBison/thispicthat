@@ -27,7 +27,7 @@ export default function WelcomeCard({
   >;
 }) {
   const [selectedLocale, setSelectedLocale] = useState<Locale>(locales[0]);
-  const [learningLanguage, setLearningLanguage] = useState<Locale>(locales[1]);
+  const [learningLanguage, setLearningLanguage] = useState<Locale | null>(null);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -45,7 +45,11 @@ export default function WelcomeCard({
     (async () => {
       try {
         setLoading(true);
-        await setUserSettings(selectedLocale, learningLanguage);
+        if (learningLanguage !== null) {
+          await setUserSettings(selectedLocale, learningLanguage);
+        } else {
+          throw Error("Learning language is null");
+        }
         document.cookie = `locale=${selectedLocale}; path=/`;
         router.push("/");
       } catch (err) {
@@ -53,7 +57,7 @@ export default function WelcomeCard({
         setLoading(false);
       }
     })();
-  }, []);
+  }, [selectedLocale, learningLanguage]);
 
   function LocalesSelect({
     label,
@@ -63,12 +67,12 @@ export default function WelcomeCard({
   }: {
     label: string;
     onChange: (locale: Locale) => void;
-    value: Locale;
+    value: Locale | null;
     translation: "native" | "locale";
   }) {
     return (
       <Select
-        defaultSelectedKeys={[value]}
+        defaultSelectedKeys={value !== null ? [value] : undefined}
         label={label}
         disallowEmptySelection
         onChange={(e) => onChange(e.target.value as Locale)}
@@ -131,7 +135,11 @@ export default function WelcomeCard({
           <Button
             type="submit"
             color="primary"
-            isDisabled={selectedLocale === learningLanguage}
+            isDisabled={
+              selectedLocale === learningLanguage ||
+              loading ||
+              learningLanguage === null
+            }
           >
             {loading ? (
               <Spinner color="default" size="sm" />

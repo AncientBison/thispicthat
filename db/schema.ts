@@ -67,7 +67,7 @@ export const itemsRelations = relations(items, ({ many }) => ({
 }));
 
 export const collectionItems = pgTable(
-  "collection_items",
+  "collection_item",
   {
     collectionId: text("collection_id")
       .notNull()

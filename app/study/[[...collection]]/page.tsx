@@ -17,6 +17,8 @@ export default async function Page({
 }) {
   const collectionId = (await params)?.collection?.[0];
 
+  const userLearningLanguage = (await getUserSettings()).learningLanguage;
+
   const t = await getTranslations("Study");
 
   const itemsPromise =
@@ -64,6 +66,7 @@ export default async function Page({
               ? undefined
               : { id: collectionId!, name: collectionName! }
           }
+          userLearningLanguage={userLearningLanguage}
         />
       </Suspense>
     </div>

@@ -5,12 +5,15 @@ import { use } from "react";
 import StudyCard from "./studyCard";
 import StudyCompletion from "./studyCompletion";
 import { Progress } from "@heroui/progress";
+import { Locale } from "@/i18n/config";
 
 export default function Study({
   itemsPromise,
   collection,
+  userLearningLanguage
 }: {
   itemsPromise: Promise<{ name: string; image: string; id: string }[]>;
+  userLearningLanguage: Locale;
   collection?: { id: string; name: string };
 }) {
   const items = use(itemsPromise);
@@ -70,6 +73,7 @@ export default function Study({
             setAnswer={setAnswer}
             onCheck={checkAnswer}
             feedback={feedback}
+            userLearningLanguage={userLearningLanguage}
           />
 
           <div className="mt-4 w-full flex justify-between items-center">

@@ -1,6 +1,12 @@
 "use client";
 
-import { collectionAddModalOpenAtom, itemsAtom } from "@/atoms";
+import {
+  collectionAddModalOpenAtom,
+  itemsAtom,
+  newItemModalOpenAtom,
+  itemNameAtom,
+  itemImageAtom,
+} from "@/atoms";
 import {
   Modal,
   ModalContent,
@@ -17,21 +23,20 @@ import { useAtom, useSetAtom } from "jotai";
 import React, { use, useCallback, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import { setCollectionItems } from "@/db/collections";
+import { AddCircleIcon } from "@/components/icons";
 
 type Item = { id: string; name: string; image: string };
 type Collection = { id: string; name: string };
-
-interface Props {
-  collectionItems: Item[];
-  allItemsPromise: Promise<Item[]>;
-  collection: Collection;
-}
 
 export default function CollectionAddModal({
   collectionItems,
   allItemsPromise,
   collection,
-}: Props) {
+}: {
+  collectionItems: Item[];
+  allItemsPromise: Promise<Item[]>;
+  collection: Collection;
+}) {
   const [isOpen, setIsOpen] = useAtom(collectionAddModalOpenAtom);
   const setLocalCollectionItems = useSetAtom(itemsAtom);
   const t = useTranslations("CollectionAddModal");
@@ -44,14 +49,26 @@ export default function CollectionAddModal({
 
   const allItems = use(allItemsPromise);
 
+  const [globalItems] = useAtom(itemsAtom);
+  const setNewItemModalOpen = useSetAtom(newItemModalOpenAtom);
+  const setName = useSetAtom(itemNameAtom);
+  const setItemImage = useSetAtom(itemImageAtom);
+
+  const mergedItems = useMemo(() => {
+    const map = new Map<string, Item>();
+    for (const it of allItems) map.set(it.id, it);
+    for (const it of globalItems) map.set(it.id, it);
+    return Array.from(map.values());
+  }, [allItems, globalItems]);
+
   const sortedItems = useMemo(() => {
-    return [...allItems].sort((a, b) => {
+    return [...mergedItems].sort((a, b) => {
       const aSelected = initialSelectedIds.has(a.id);
       const bSelected = initialSelectedIds.has(b.id);
       if (aSelected !== bSelected) return bSelected ? 1 : -1;
       return a.name.localeCompare(b.name);
     });
-  }, [allItems, initialSelectedIds]);
+  }, [mergedItems, initialSelectedIds]);
 
   useEffect(() => {
     const ids = new Set(collectionItems.map((item) => item.id));
@@ -67,13 +84,25 @@ export default function CollectionAddModal({
     });
   }, []);
 
-  const hasChanges = useMemo(() => {
-    if (initialSelectedIds.size !== selectedIds.size) return true;
-    for (const id of Array.from(selectedIds)) {
-      if (!initialSelectedIds.has(id)) return true;
+  const openNewItemModal = useCallback(() => {
+    setName("");
+    setItemImage(null);
+    setNewItemModalOpen(true);
+  }, [setName, setItemImage, setNewItemModalOpen]);
+
+  useEffect(() => {
+    const existingServerIds = new Set(allItems.map((i) => i.id));
+    for (const gi of globalItems) {
+      if (!existingServerIds.has(gi.id)) {
+        setSelectedIds((prev) => {
+          if (prev.has(gi.id)) return prev;
+          const next = new Set(prev);
+          next.add(gi.id);
+          return next;
+        });
+      }
     }
-    return false;
-  }, [initialSelectedIds, selectedIds]);
+  }, [globalItems]);
 
   const handleSave = useCallback(
     async (onClose: () => void) => {
@@ -106,6 +135,8 @@ export default function CollectionAddModal({
 
             <ModalBody className="w-full">
               <div className="max-h-80 overflow-auto">
+                <NewItemRow onOpen={openNewItemModal} />
+                <Divider className="my-2" />
                 {sortedItems.map((item) => (
                   <ItemRow
                     key={item.id}
@@ -124,7 +155,7 @@ export default function CollectionAddModal({
                   {t("cancel")}
                 </Button>
                 <Button
-                  isDisabled={!hasChanges || loading}
+                  isDisabled={loading}
                   color="primary"
                   onPress={() => handleSave(onClose)}
                 >
@@ -136,6 +167,26 @@ export default function CollectionAddModal({
         )}
       </ModalContent>
     </Modal>
+  );
+}
+
+function NewItemRow({ onOpen }: { onOpen: () => void }) {
+  return (
+    <div
+      className={clsx(
+        "flex items-center gap-3 p-2 rounded-md cursor-pointer",
+        "hover:bg-gray-100 dark:hover:bg-slate-700",
+        "bg-white dark:bg-slate-900"
+      )}
+      onClick={onOpen}
+      role="button"
+    >
+      <div className="w-24 h-16 flex items-center justify-center rounded text-gray-500 dark:text-slate-400">
+        <AddCircleIcon size="70 %" />
+      </div>
+      <div className="flex-1 font-medium">Create new item</div>
+      <div className="w-4 h-4" />
+    </div>
   );
 }
 

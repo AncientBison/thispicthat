@@ -10,7 +10,10 @@ import { eq } from "drizzle-orm";
 import { Collection } from "@/db/default/setup";
 import { Locale } from "@/i18n/config";
 
-export async function createDefaultCollections(language: Locale) {
+export async function createDefaultCollectionsForUser(
+  userId: string,
+  language: Locale
+) {
   const langPath = path.resolve(
     process.cwd(),
     "db",
@@ -24,7 +27,7 @@ export async function createDefaultCollections(language: Locale) {
     try {
       const insertResult = await db
         .insert(collectionsTable)
-        .values({ name: collection.name, userId: null, language })
+        .values({ name: collection.name, userId, language })
         .returning({ id: collectionsTable.id, name: collectionsTable.name });
 
       const created = insertResult[0];
@@ -33,10 +36,18 @@ export async function createDefaultCollections(language: Locale) {
       const rows = await db.query.items.findMany({
         where: (item, { or, and, isNull }) =>
           or(
-            ...itemNames.map((n) => and(eq(item.name, n), isNull(item.userId)))
+            ...itemNames.map((name) =>
+              and(eq(item.name, name), isNull(item.userId))
+            )
           ),
         columns: { id: true, name: true },
       });
+
+      if (rows.length === 0) {
+        throw new Error(
+          `No items found for default collection ${collection.name}`
+        );
+      }
 
       const nameToId = new Map(rows.map((row) => [row.name, row.id]));
 
@@ -52,7 +63,10 @@ export async function createDefaultCollections(language: Locale) {
         await db.insert(collectionItemsTable).values(collectionItemRows);
       }
     } catch (error) {
-      console.error(`Failed to create collection ${collection.name}:`, error);
+      console.error(
+        `Failed to create collection ${collection.name} for user ${userId}:`,
+        error
+      );
     }
   }
 }

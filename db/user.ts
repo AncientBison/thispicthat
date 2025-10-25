@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import db from "@/db";
+import { createDefaultCollectionsForUser } from "@/db/default/collectionCreator";
 import { userSettings } from "@/db/schema";
 import { Locale } from "@/i18n/config";
 
@@ -44,6 +45,8 @@ export async function setUserSettings(
         target: userSettings.userId,
         set: { nativeLanguage, learningLanguage },
       });
+
+    await createDefaultCollectionsForUser(userId, learningLanguage);
   } catch (error) {
     console.error("Failed to set user settings:", error);
     throw new Error("Failed to set user settings", { cause: error });

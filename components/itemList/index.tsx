@@ -10,6 +10,8 @@ import { Masonry } from "react-plock";
 import StudyTile from "@/components/itemList/studyTile";
 import CollectionAddTile from "@/components/itemList/collectionAddTile";
 import NewCollectionTile from "@/components/itemList/newCollectionTile";
+import { Divider } from "@heroui/divider";
+import { useTranslations } from "next-intl";
 
 export default function ItemList({
   itemsPromise,
@@ -38,6 +40,8 @@ export default function ItemList({
     collectionsDataPromise === null ? [] : use(collectionsDataPromise);
 
   const [collections, setCollectionsAtom] = useAtom(collectionsAtom);
+
+  const t = useTranslations("ItemList");
 
   useEffect(() => {
     setCollectionsAtom((prev) =>
@@ -98,19 +102,45 @@ export default function ItemList({
     />
   ));
 
-  const masonryItems = [...baseTiles, ...collectionTiles, ...itemTiles];
-
   return (
-    <Masonry
-      config={{
-        columns: [2, 3],
-        gap: [16, 16],
-        media: [768, 1280],
-        useBalancedLayout: false,
-      }}
-      className="mx-auto p-4 max-w-6xl"
-      items={masonryItems}
-      render={(item) => item}
-    />
+    <div className="mx-auto p-4 gap-4 max-w-6xl flex flex-col">
+      <Masonry
+        config={{
+          columns: [2, 3],
+          gap: [16, 16],
+          media: [768, 1280],
+          useBalancedLayout: false,
+        }}
+        items={baseTiles}
+        render={(item) => item}
+      />
+      <div>
+        <Divider />
+        <p className="text-center text-small text-gray-500 mt-2">
+          {t("selectCollectionToStudy")}
+        </p>
+      </div>
+      <Masonry
+        config={{
+          columns: [2, 3],
+          gap: [16, 16],
+          media: [768, 1280],
+          useBalancedLayout: false,
+        }}
+        items={collectionTiles}
+        render={(item) => item}
+      />
+      <Divider />
+      <Masonry
+        config={{
+          columns: [2, 3],
+          gap: [16, 16],
+          media: [768, 1280],
+          useBalancedLayout: false,
+        }}
+        items={itemTiles}
+        render={(item) => item}
+      />
+    </div>
   );
 }

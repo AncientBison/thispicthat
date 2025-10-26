@@ -30,7 +30,9 @@
     "addItem": "Ajouter un nouvel objet",
     "study": "Étudier",
     "collectionAdd": "Ajouter un object",
-    "newCollection": "Nouvelle collection"
+    "newCollection": "Nouvelle collection",
+    "selectCollectionToStudy": "Cliquez sur une collection pour l'étudier",
+    "studyAll": "Etudiez tout"
   },
   "ThemeSwitcher": {
     "switchMode": "Passer au mode {theme, select, dark {sombre} light {clair} other {}}"

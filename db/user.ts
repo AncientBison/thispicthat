@@ -46,7 +46,7 @@ export async function setUserSettings(
         set: { nativeLanguage, learningLanguage },
       });
 
-    await createDefaultCollectionsForUser(userId, learningLanguage);
+    await createDefaultCollectionsForUser(userId, learningLanguage, nativeLanguage);
   } catch (error) {
     console.error("Failed to set user settings:", error);
     throw new Error("Failed to set user settings", { cause: error });

@@ -19,7 +19,7 @@ export default function StudyTile({ collectionId }: { collectionId?: string }) {
       >
         <CardBody className="flex flex-col justify-center items-center">
           <BookIcon size={"100%"} className="w-1/2 h-min" />
-          <p className="font-bold">{t("study")}</p>
+          <p className="font-bold">{collectionId === undefined ? t("studyAll") : t("study")}</p>
         </CardBody>
       </Card>
     </Link>

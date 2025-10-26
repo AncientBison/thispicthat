@@ -46,7 +46,9 @@
     "addItem": "Add a new item",
     "study": "Study",
     "collectionAdd": "Add an item",
-    "newCollection": "New collection"
+    "newCollection": "New collection",
+    "selectCollectionToStudy": "Click on a collection to study it",
+    "studyAll": "Study all"
   },
   "Study": {
     "title": "Studying {collection, select, _ {your items} other {<b>{collection}</b>}}",

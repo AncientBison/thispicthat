@@ -29,6 +29,23 @@ export async function createDefaultItems(language: Locale) {
       );
 
       try {
+        const existing = await db.query.items.findFirst({
+          where: (item, { eq, isNull, and }) =>
+            and(
+              eq(item.name, itemData.name),
+              eq(item.language, language),
+              isNull(item.userId)
+            ),
+          columns: { id: true },
+        });
+
+        if (existing) {
+          console.info(
+            `Default item already exists for ${itemData.name} (${language}), skipping creation.`
+          );
+          continue;
+        }
+
         const buffer = await fs.promises.readFile(filePath);
 
         const processedImage = await sharp(buffer)

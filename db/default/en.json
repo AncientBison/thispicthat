@@ -43,5 +43,56 @@
       { "name": "Harp", "fileName": "harp" },
       { "name": "Accordion", "fileName": "accordion" }
     ]
+  },
+  {
+    "name": "Food",
+    "items": [
+      { "name": "Apple", "fileName": "apple" },
+      { "name": "Sandwich", "fileName": "sandwich" },
+      { "name": "Water", "fileName": "water" },
+      { "name": "Coffee", "fileName": "coffee" },
+      { "name": "Tea", "fileName": "tea" },
+      { "name": "Milk", "fileName": "milk" },
+      { "name": "Butter", "fileName": "butter" },
+      { "name": "Banana", "fileName": "banana" },
+      { "name": "Bread", "fileName": "bread" },
+      { "name": "Cheese", "fileName": "cheese" },
+      { "name": "Eggs", "fileName": "eggs" },
+      { "name": "Fish", "fileName": "fish" },
+      { "name": "Grapes", "fileName": "grapes" },
+      { "name": "Ice Cream", "fileName": "ice_cream" },
+      { "name": "Juice", "fileName": "juice" },
+      { "name": "Meat", "fileName": "meat" }
+    ]
+  },
+  {
+    "name": "Jobs",
+    "items": [
+      { "name": "Doctor", "fileName": "doctor" },
+      { "name": "Teacher", "fileName": "teacher" },
+      { "name": "Engineer", "fileName": "engineer" },
+      { "name": "Chef", "fileName": "chef" },
+      { "name": "Artist", "fileName": "artist" },
+      { "name": "Farmer", "fileName": "farmer" },
+      { "name": "Pilot", "fileName": "pilot" },
+      { "name": "Nurse", "fileName": "nurse" },
+      { "name": "Firefighter", "fileName": "firefighter" },
+      { "name": "Police Officer", "fileName": "police_officer" }
+    ]
+  },
+  {
+    "name": "Animals",
+    "items": [
+      { "name": "Dog", "fileName": "dog" },
+      { "name": "Cat", "fileName": "cat" },
+      { "name": "Bird", "fileName": "bird" },
+      { "name": "Fish", "fileName": "fish_animal" },
+      { "name": "Horse", "fileName": "horse" },
+      { "name": "Cow", "fileName": "cow" },
+      { "name": "Pig", "fileName": "pig" },
+      { "name": "Bear", "fileName": "bear" },
+      { "name": "Sheep", "fileName": "sheep" },
+      { "name": "Lizard", "fileName": "lizard" }
+    ]
   }
 ]

@@ -43,5 +43,56 @@
       { "name": "Arpa", "fileName": "harp" },
       { "name": "Acordeón", "fileName": "accordion" }
     ]
+  },
+  {
+    "name": "Comida",
+    "items": [
+      { "name": "Manzana", "fileName": "apple" },
+      { "name": "Sándwich", "fileName": "sandwich" },
+      { "name": "Agua", "fileName": "water" },
+      { "name": "Café", "fileName": "coffee" },
+      { "name": "Té", "fileName": "tea" },
+      { "name": "Leche", "fileName": "milk" },
+      { "name": "Mantequilla", "fileName": "butter" },
+      { "name": "Banana", "fileName": "banana" },
+      { "name": "Pan", "fileName": "bread" },
+      { "name": "Queso", "fileName": "cheese" },
+      { "name": "Huevos", "fileName": "eggs" },
+      { "name": "Pescado", "fileName": "fish" },
+      { "name": "Uvas", "fileName": "grapes" },
+      { "name": "Helado", "fileName": "ice_cream" },
+      { "name": "Jugo", "fileName": "juice" },
+      { "name": "Carne", "fileName": "meat" }
+    ]
+  },
+  {
+    "name": "Profesiones",
+    "items": [
+      { "name": "Médico", "fileName": "doctor" },
+      { "name": "Profesor", "fileName": "teacher" },
+      { "name": "Ingeniero", "fileName": "engineer" },
+      { "name": "Chef", "fileName": "chef" },
+      { "name": "Artista", "fileName": "artist" },
+      { "name": "Granjero", "fileName": "farmer" },
+      { "name": "Piloto", "fileName": "pilot" },
+      { "name": "Enfermero", "fileName": "nurse" },
+      { "name": "Bombero", "fileName": "firefighter" },
+      { "name": "Policía", "fileName": "police_officer" }
+    ]
+  },
+  {
+    "name": "Animales",
+    "items": [
+      { "name": "Perro", "fileName": "dog" },
+      { "name": "Gato", "fileName": "cat" },
+      { "name": "Pájaro", "fileName": "bird" },
+      { "name": "Pez", "fileName": "fish_animal" },
+      { "name": "Caballo", "fileName": "horse" },
+      { "name": "Vaca", "fileName": "cow" },
+      { "name": "Cerdo", "fileName": "pig" },
+      { "name": "Oso", "fileName": "bear" },
+      { "name": "Oveja", "fileName": "sheep" },
+      { "name": "Lagarto", "fileName": "lizard" }
+    ]
   }
 ]

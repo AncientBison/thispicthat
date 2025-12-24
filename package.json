@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix",
-    "setup": "tsx ./db/default/setup.ts"
+    "setup": "drizzle-kit push && tsx ./db/default/setup.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
@@ -60,7 +60,7 @@
     "framer-motion": "11.18.2",
     "intl-messageformat": "10.7.16",
     "jotai": "^2.14.0",
-    "next": "15.3.1",
+    "next": "^15.3.1",
     "next-auth": "^5.0.0-beta.29",
     "next-intl": "^4.3.9",
     "next-themes": "0.4.6",

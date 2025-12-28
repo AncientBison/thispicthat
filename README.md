@@ -68,7 +68,7 @@ ENV=development
 POSTGRES_URL="postgresql://user:password@localhost:5432/thispicthat"
 
 # Auth.js (Google OAuth)
-AUTH_SECRET="your-auth-secret"
+NEXTAUTH_SECRET="your-auth-secret"
 AUTH_GOOGLE_ID="your-google-client-id"
 AUTH_GOOGLE_SECRET="your-google-client-secret"
 

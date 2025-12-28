@@ -6,10 +6,10 @@ import { items } from "@/db/schema";
 import env from "@/env";
 import { and, eq } from "drizzle-orm";
 import { getUserIdOrThrow, getUserSettings } from "@/db/user";
+import { uploadToS3, deleteFromS3, getPresignedUrl } from "@/db/s3";
 
 export async function createItemEntry(item: { name: string; image: File }) {
   const userId = await getUserIdOrThrow();
-
   const userLearningLanguage = (await getUserSettings()).learningLanguage;
 
   const buffer = Buffer.from(await item.image.arrayBuffer());
@@ -24,14 +24,18 @@ export async function createItemEntry(item: { name: string; image: File }) {
     .toFormat("webp", { quality: 80, effort: 4 })
     .toBuffer();
 
+  const fileKey = `${crypto.randomUUID()}.webp`;
+
   try {
+    await uploadToS3(fileKey, processedImage, "image/webp");
+
     return (
       await db
         .insert(items)
         .values({
           userId,
           name: item.name,
-          image: processedImage,
+          image: fileKey,
           language: userLearningLanguage,
         })
         .returning({ id: items.id })
@@ -54,13 +58,22 @@ export async function deleteItemEntry(itemId: string) {
   try {
     const result = await db
       .delete(items)
-      .where(and(eq(items.id, itemId), eq(items.userId, userId)));
+      .where(and(eq(items.id, itemId), eq(items.userId, userId)))
+      .returning({ imageKey: items.image });
 
-    if (result.rowCount === 0) {
+    if (result.length === 0) {
       throw new Error(
         "Item entry not found or you do not have permission to delete it"
       );
     }
+
+    const imageKey = result[0].imageKey;
+    if (imageKey) {
+        await deleteFromS3(imageKey).catch(error => {
+            console.error(`Failed to delete S3 object ${imageKey}`, error);
+        });
+    }
+
   } catch (error) {
     throw new Error("Failed to delete item entry", {
       cause: error,
@@ -70,40 +83,42 @@ export async function deleteItemEntry(itemId: string) {
 
 export async function getItems() {
   const userId = await getUserIdOrThrow();
+  const userLearningLanguage = (await getUserSettings()).learningLanguage;
 
-  const userLearningLanguage = (await getUserSettings()).learningLanguage
-
-  const items = await db.query.items.findMany({
+  const dbItems = await db.query.items.findMany({
     where: (items, { eq, or, isNull }) =>
       or(eq(items.userId, userId), and(isNull(items.userId), eq(items.language, userLearningLanguage))),
     orderBy: (items, { desc }) => desc(items.createdAt),
   });
 
-  return items.map((item) => ({
-    name: item.name,
-    image: item.image.toString("base64"),
-    id: item.id,
+  const itemsWithUrls = await Promise.all(dbItems.map(async (item) => {
+    const url = await getPresignedUrl(item.image);
+
+    return {
+        name: item.name,
+        image: url, 
+        id: item.id,
+    };
   }));
+
+  return itemsWithUrls;
 }
 
 export async function getItemsImages(itemIds: string[]) {
   const uniqueIds = Array.from(new Set(itemIds));
 
-  const imageRows =
-    uniqueIds.length > 0
-      ? await db.query.items.findMany({
-          where: (item, { or, eq }) =>
-            or(...uniqueIds.map((id) => eq(item.id, id))),
-          columns: { id: true, image: true },
-        })
-      : [];
+  if (uniqueIds.length === 0) return new Map();
 
-  return new Map(
-    imageRows.map((r) => [
-      r.id,
-      typeof r.image === "string"
-        ? r.image
-        : Buffer.from(r.image as any).toString("base64"),
-    ])
-  );
+  const imageRows = await db.query.items.findMany({
+      where: (item, { or, eq }) =>
+        or(...uniqueIds.map((id) => eq(item.id, id))),
+      columns: { id: true, image: true },
+    });
+
+  const rowsWithUrls = await Promise.all(imageRows.map(async (r) => {
+      const url = await getPresignedUrl(r.image);
+      return [r.id, url] as const;
+  }));
+
+  return new Map(rowsWithUrls);
 }

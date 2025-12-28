@@ -1,0 +1,6 @@
+FROM dxflrs/garage:v2.1.0 AS source
+FROM alpine:latest
+RUN apk add --no-cache netcat-openbsd
+COPY --from=source /garage /garage
+COPY garage.toml /etc/garage.toml
+CMD ["/garage", "server"]

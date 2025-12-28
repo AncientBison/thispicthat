@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix",
-    "setup": "drizzle-kit push && tsx ./db/default/setup.ts"
+    "setup": "tsx node_modules/drizzle-kit/bin.cjs push && tsx ./db/default/setup.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
+    "@aws-sdk/client-s3": "^3.958.0",
+    "@aws-sdk/s3-request-presigner": "^3.958.0",
     "@heroui/accordion": "2.2.23",
     "@heroui/alert": "2.2.26",
     "@heroui/autocomplete": "2.3.28",

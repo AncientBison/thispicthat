@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: postgres
+    volumes:
+      - pg_data_dev:/var/lib/postgresql/data
+
+  garage:
+    image: dxflrs/garage:v2.1.0
+    ports:
+      - "3900:3900"
+      - "3901:3901"
+      - "3902:3902"
+    volumes:
+      - ./garage.toml:/etc/garage.toml
+      - garage_data_dev:/var/lib/garage
+    command: /garage server
+
+volumes:
+  pg_data_dev:
+  garage_data_dev:

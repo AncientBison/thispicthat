@@ -1,0 +1,81 @@
+services:
+  db:
+    image: postgres:18-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  garage:
+    image: local/project-garage:latest
+    pull_policy: never
+    restart: always
+    volumes:
+      - garage_data:/var/lib/garage
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "3903"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  garage-init:
+    image: local/project-init:latest
+    pull_policy: never
+    depends_on:
+      garage:
+        condition: service_healthy
+    volumes:
+      - app_secrets:/secrets
+    networks:
+      - app-network
+
+  setup:
+    image: local/project-migration:latest
+    pull_policy: never
+    depends_on:
+      garage-init:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+    volumes:
+      - app_secrets:/secrets
+    environment:
+      POSTGRES_URL: postgresql://postgres:postgres@db:5432/postgres
+    networks:
+      - app-network
+
+  app:
+    image: local/project-app:latest
+    pull_policy: never
+    ports:
+      - "80:3000"
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    volumes:
+      - app_secrets:/secrets
+    environment:
+      POSTGRES_URL: postgresql://postgres:postgres@db:5432/postgres
+    networks:
+      - app-network
+
+volumes:
+  pgdata: {}
+  garage_data: {}
+  app_secrets: {}
+
+networks:
+  app-network:
+    driver: bridge

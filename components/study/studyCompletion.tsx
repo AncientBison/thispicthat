@@ -31,7 +31,7 @@ export default function StudyCompletion({
                 className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-900 p-3 rounded-xl w-full shadow-lg"
               >
                 <Image
-                  src={`data:image/webp;base64,${incorrectItem.image}`}
+                  src={incorrectItem.image}
                   alt={incorrectItem.name}
                   className="w-full h-24 object-cover"
                 />

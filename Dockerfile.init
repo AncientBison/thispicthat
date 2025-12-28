@@ -1,0 +1,5 @@
+FROM alpine:latest
+RUN apk add --no-cache curl jq
+COPY init-garage.sh /init.sh
+RUN chmod +x /init.sh
+CMD ["/init.sh"]

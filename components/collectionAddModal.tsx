@@ -212,7 +212,7 @@ function ItemRow({
       role="button"
     >
       <Image
-        src={`data:image/webp;base64,${item.image}`}
+        src={item.image}
         alt={item.name}
         className="w-24 h-16 object-cover rounded"
       />

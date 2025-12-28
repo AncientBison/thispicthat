@@ -6,6 +6,7 @@ import { items } from "@/db/schema";
 import env from "@/env";
 import { Collection } from "@/db/default/setup";
 import { Locale } from "@/i18n/config";
+import { uploadToS3 } from "@/db/s3";
 
 export async function createDefaultItems(language: Locale) {
   const langPath = path.resolve(
@@ -29,6 +30,7 @@ export async function createDefaultItems(language: Locale) {
       );
 
       try {
+        // 1. Check if item already exists in DB
         const existing = await db.query.items.findFirst({
           where: (item, { eq, isNull, and }) =>
             and(
@@ -46,6 +48,7 @@ export async function createDefaultItems(language: Locale) {
           continue;
         }
 
+        // 2. Read and Process Image
         const buffer = await fs.promises.readFile(filePath);
 
         const processedImage = await sharp(buffer)
@@ -58,12 +61,22 @@ export async function createDefaultItems(language: Locale) {
           .toFormat("webp", { quality: 80, effort: 4 })
           .toBuffer();
 
+        // 3. Generate S3 Key and Upload
+        // We use a UUID to ensure no collisions in the bucket
+        const s3Key = `${crypto.randomUUID()}.webp`;
+        
+        await uploadToS3(s3Key, processedImage, "image/webp");
+
+        // 4. Insert into DB with the S3 Key
         await db.insert(items).values({
           userId: null,
           name: itemData.name,
-          image: processedImage,
+          image: s3Key, // Store the string key, not the buffer
           language,
         });
+
+        console.log(`Seeded item: ${itemData.name}`);
+
       } catch (error) {
         console.error(
           `Failed to create item for ${itemData.name} from ${filePath}:`,

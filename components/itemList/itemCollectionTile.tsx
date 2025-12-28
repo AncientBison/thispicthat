@@ -46,7 +46,7 @@ export default function ItemCollectionTile({
               }}
               radius="none"
               shadow="sm"
-              src={`data:image/webp;base64,${image}`}
+              src={image}
               width="100%"
             ></Image>
           ))}

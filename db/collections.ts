@@ -2,34 +2,39 @@
 
 import db from "@/db";
 import { getUserIdOrThrow, getUserSettings } from "@/db/user";
-import { getItemsImages } from "@/db/items";
 import { collectionItems, collections } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
+import { getPresignedUrl } from "@/db/s3";
 
 async function mapItemsWithImages(
-  collectionItems: { item: { id: string; name: string } }[]
+  collectionItems: { item: { id: string; name: string; image: string } }[]
 ) {
-  const itemIds = Array.from(
-    new Set(collectionItems.map((collectionItem) => collectionItem.item.id))
+  const uniqueItems = Array.from(
+    new Map(collectionItems.map((ci) => [ci.item.id, ci.item])).values()
   );
-  const imageMap = await getItemsImages(itemIds);
+
+  const urlMap = new Map<string, string>();
+  await Promise.all(
+    uniqueItems.map(async (item) => {
+      const url = await getPresignedUrl(item.image);
+      urlMap.set(item.id, url);
+    })
+  );
 
   return collectionItems.map(({ item }) => {
-    const image = imageMap.get(item.id);
-    if (image === undefined) {
-      throw new Error(`Image not found for item id: ${item.id}`);
+    const signedUrl = urlMap.get(item.id);
+    if (!signedUrl) {
+       throw new Error(`Failed to sign URL for item: ${item.id}`);
     }
-
-    return { id: item.id, name: item.name, image };
+    return { id: item.id, name: item.name, image: signedUrl };
   });
 }
 
 export async function getCollectionsData() {
   const userId = await getUserIdOrThrow();
-
   const userLearningLanguage = (await getUserSettings()).learningLanguage;
 
-  const collections = await db.query.collections.findMany({
+  const collectionsData = await db.query.collections.findMany({
     where: (collection, { eq, or, and, isNull }) =>
       or(
         eq(collection.userId, userId),
@@ -43,22 +48,24 @@ export async function getCollectionsData() {
       collectionItems: {
         with: {
           item: {
-            columns: { id: true, name: true, image: false },
+            columns: { id: true, name: true, image: true },
           },
         },
       },
     },
   });
 
-  const allCollectionItems = collections.flatMap(
+  const allCollectionItems = collectionsData.flatMap(
     (collection) => collection.collectionItems
   );
+
   const allItemsWithImages = await mapItemsWithImages(allCollectionItems);
+  
   const imageMap = new Map(
     allItemsWithImages.map((item) => [item.id, item.image])
   );
 
-  return collections.map((collection) => ({
+  return collectionsData.map((collection) => ({
     id: collection.id,
     name: collection.name,
     items: collection.collectionItems.map(({ item }) => ({
@@ -82,7 +89,7 @@ export async function getCollectionItems(collectionId: string) {
       collectionItems: {
         with: {
           item: {
-            columns: { id: true, name: true, image: false },
+            columns: { id: true, name: true, image: true },
           },
         },
       },

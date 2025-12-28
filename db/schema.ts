@@ -5,7 +5,6 @@ import {
   text,
   primaryKey,
   integer,
-  customType,
   pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "@auth/core/adapters";
@@ -13,25 +12,6 @@ import { relations } from "drizzle-orm";
 import { locales } from "@/i18n/config";
 
 export const language = pgEnum("language", locales);
-
-export const image = customType<{
-  data: Buffer;
-  driverData: Buffer;
-}>({
-  dataType() {
-    return "bytea";
-  },
-  fromDriver(value) {
-    if (typeof value === "string") {
-      return Buffer.from(value, "hex");
-    }
-
-    return value;
-  },
-  toDriver(value: Buffer) {
-    return value;
-  },
-});
 
 export const collections = pgTable("collection", {
   id: text("id")
@@ -55,7 +35,7 @@ export const items = pgTable("item", {
     .$defaultFn(() => crypto.randomUUID()),
   userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
-  image: image("image").notNull(),
+  image: text("image").notNull(),
   language: language("language"),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true })
     .notNull()

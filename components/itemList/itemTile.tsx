@@ -42,7 +42,7 @@ export default function ItemTile({
           className="w-full object-cover rounded-b-none"
           radius="lg"
           shadow="sm"
-          src={`data:image/webp;base64,${image}`}
+          src={image}
           width="100%"
         />
       </CardBody>

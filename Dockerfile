@@ -21,14 +21,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ARG PORT
-ARG POSTGRES_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG AUTH_GOOGLE_ID
-ARG AUTH_GOOGLE_SECRET
-ARG MAX_IMAGE_DIMENSION
-
 # S3 Args with default fallbacks (so build doesn't fail if they aren't passed)
 ARG S3_ENDPOINT="http://build-time-placeholder"
 ARG S3_REGION="garage"
@@ -38,11 +30,6 @@ ARG S3_SECRET_ACCESS_KEY="placeholder-secret"
 ARG S3_FORCE_PATH_STYLE="true"
 
 # Map ARGs to ENVs so Next.js can see them during 'npm run build'
-ENV NEXTAUTH_URL=$NEXTAUTH_URL
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-ENV AUTH_GOOGLE_ID=$AUTH_GOOGLE_ID
-ENV AUTH_GOOGLE_SECRET=$AUTH_GOOGLE_SECRET
-ENV MAX_IMAGE_DIMENSION=$MAX_IMAGE_DIMENSION
 ENV S3_ENDPOINT=$S3_ENDPOINT
 ENV S3_REGION=$S3_REGION
 ENV S3_BUCKET=$S3_BUCKET
@@ -53,6 +40,7 @@ ENV S3_FORCE_PATH_STYLE=$S3_FORCE_PATH_STYLE
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN \
+  set -a && . ./stack.env && set +a && \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \

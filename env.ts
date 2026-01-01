@@ -23,8 +23,6 @@ const envSchema = z.object({
     .default("development"),
 });
 
-console.error("ENV VARIABLES:", process.env.AUTH_URL);
-
 const env = envSchema.parse(process.env);
 
 export default env;

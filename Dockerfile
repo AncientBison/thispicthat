@@ -2,13 +2,11 @@
 
 FROM node:20-alpine AS base
 
-# Install dependencies only when needed
+# 1. Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
@@ -17,13 +15,21 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-# Rebuild the source code only when needed
+# 2. Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# These will be overwritten by the real values at runtime
+ARG PORT
+ARG POSTGRES_URL
+ARG NEXTAUTH_SECRET
+ARG NEXTAUTH_URL
+ARG AUTH_GOOGLE_ID
+ARG AUTH_GOOGLE_SECRET
+ARG MAX_IMAGE_DIMENSION
+
+# S3 Args with default fallbacks (so build doesn't fail if they aren't passed)
 ARG S3_ENDPOINT="http://build-time-placeholder"
 ARG S3_REGION="garage"
 ARG S3_BUCKET="placeholder-bucket"
@@ -31,7 +37,12 @@ ARG S3_ACCESS_KEY_ID="placeholder-key"
 ARG S3_SECRET_ACCESS_KEY="placeholder-secret"
 ARG S3_FORCE_PATH_STYLE="true"
 
-# Make them available to the build command
+# Map ARGs to ENVs so Next.js can see them during 'npm run build'
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV AUTH_GOOGLE_ID=$AUTH_GOOGLE_ID
+ENV AUTH_GOOGLE_SECRET=$AUTH_GOOGLE_SECRET
+ENV MAX_IMAGE_DIMENSION=$MAX_IMAGE_DIMENSION
 ENV S3_ENDPOINT=$S3_ENDPOINT
 ENV S3_REGION=$S3_REGION
 ENV S3_BUCKET=$S3_BUCKET
@@ -48,9 +59,7 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-# Production image, copy all the files and run next
 FROM base AS runner
-
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -60,9 +69,6 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
@@ -71,9 +77,6 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT=3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["sh", "-c", "set -a && . /secrets/s3.env && set +a && node server.js"]

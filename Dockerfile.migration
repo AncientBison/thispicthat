@@ -9,7 +9,6 @@ COPY i18n ./i18n
 COPY drizzle.config.ts .
 COPY tsconfig.json .
 COPY env.ts .
-COPY .env .
 
 # These will be overwritten by the real values at runtime
 ARG S3_ENDPOINT="http://build-time-placeholder"

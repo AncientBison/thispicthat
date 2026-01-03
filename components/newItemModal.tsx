@@ -60,13 +60,11 @@ export default function NewItemModal() {
           useWebWorker: true,
           fileType: "image/webp",
         });
-        const id = await createItemEntry({ name, image: processedImage });
+        const { id, imageUrl } = await createItemEntry({ name, image: processedImage });
         addToast({ color: "success", title: t("itemCreated") });
         onClose && onClose();
 
-        const imageBase64 = await toBase64(processedImage);
-
-        setItems((items) => [...items, { name, image: imageBase64, id }]);
+        setItems((items) => [...items, { name, image: imageUrl, id }]);
       } catch (error) {
         addToast({ color: "danger", title: t("errorCreatingItem") });
         onClose && onClose();

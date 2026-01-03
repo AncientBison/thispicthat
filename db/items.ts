@@ -29,17 +29,20 @@ export async function createItemEntry(item: { name: string; image: File }) {
   try {
     await uploadToS3(fileKey, processedImage, "image/webp");
 
-    return (
-      await db
-        .insert(items)
-        .values({
-          userId,
-          name: item.name,
-          image: fileKey,
-          language: userLearningLanguage,
-        })
-        .returning({ id: items.id })
-    )[0].id;
+    return {
+      id: (
+        await db
+          .insert(items)
+          .values({
+            userId,
+            name: item.name,
+            image: fileKey,
+            language: userLearningLanguage,
+          })
+          .returning({ id: items.id })
+      )[0].id,
+      imageUrl: await getPresignedUrl(fileKey),
+    };
   } catch (error) {
     console.error("Error logging item entry:", error);
     throw new Error("Failed to log item entry", {
@@ -69,11 +72,10 @@ export async function deleteItemEntry(itemId: string) {
 
     const imageKey = result[0].imageKey;
     if (imageKey) {
-        await deleteFromS3(imageKey).catch(error => {
-            console.error(`Failed to delete S3 object ${imageKey}`, error);
-        });
+      await deleteFromS3(imageKey).catch((error) => {
+        console.error(`Failed to delete S3 object ${imageKey}`, error);
+      });
     }
-
   } catch (error) {
     throw new Error("Failed to delete item entry", {
       cause: error,
@@ -87,19 +89,24 @@ export async function getItems() {
 
   const dbItems = await db.query.items.findMany({
     where: (items, { eq, or, isNull }) =>
-      or(eq(items.userId, userId), and(isNull(items.userId), eq(items.language, userLearningLanguage))),
+      or(
+        eq(items.userId, userId),
+        and(isNull(items.userId), eq(items.language, userLearningLanguage))
+      ),
     orderBy: (items, { desc }) => desc(items.createdAt),
   });
 
-  const itemsWithUrls = await Promise.all(dbItems.map(async (item) => {
-    const url = await getPresignedUrl(item.image);
+  const itemsWithUrls = await Promise.all(
+    dbItems.map(async (item) => {
+      const url = await getPresignedUrl(item.image);
 
-    return {
+      return {
         name: item.name,
-        image: url, 
+        image: url,
         id: item.id,
-    };
-  }));
+      };
+    })
+  );
 
   return itemsWithUrls;
 }
@@ -110,15 +117,16 @@ export async function getItemsImages(itemIds: string[]) {
   if (uniqueIds.length === 0) return new Map();
 
   const imageRows = await db.query.items.findMany({
-      where: (item, { or, eq }) =>
-        or(...uniqueIds.map((id) => eq(item.id, id))),
-      columns: { id: true, image: true },
-    });
+    where: (item, { or, eq }) => or(...uniqueIds.map((id) => eq(item.id, id))),
+    columns: { id: true, image: true },
+  });
 
-  const rowsWithUrls = await Promise.all(imageRows.map(async (r) => {
+  const rowsWithUrls = await Promise.all(
+    imageRows.map(async (r) => {
       const url = await getPresignedUrl(r.image);
       return [r.id, url] as const;
-  }));
+    })
+  );
 
   return new Map(rowsWithUrls);
 }

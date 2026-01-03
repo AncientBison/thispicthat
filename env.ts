@@ -9,6 +9,7 @@ const envSchema = z.object({
   S3_BUCKET: z.string(),
   S3_ACCESS_KEY_ID: z.string(),
   S3_SECRET_ACCESS_KEY: z.string(),
+  S3_PUBLIC_ENDPOINT: z.url(),
   AUTH_SECRET: z.string(),
   AUTH_URL : z.url(),
   AUTH_GOOGLE_ID: z.string(),

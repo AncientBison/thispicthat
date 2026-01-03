@@ -7,9 +7,19 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import env from "@/env";
 
-export const s3 = new S3Client({
+const internalS3 = new S3Client({
   region: env.S3_REGION,
-  endpoint: env.S3_ENDPOINT,
+  endpoint: env.S3_ENDPOINT, 
+  credentials: {
+    accessKeyId: env.S3_ACCESS_KEY_ID,
+    secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+  },
+  forcePathStyle: true,
+});
+
+const signerS3 = new S3Client({
+  region: env.S3_REGION,
+  endpoint: env.S3_PUBLIC_ENDPOINT,
   credentials: {
     accessKeyId: env.S3_ACCESS_KEY_ID,
     secretAccessKey: env.S3_SECRET_ACCESS_KEY,
@@ -30,7 +40,7 @@ export async function uploadToS3(
     Body: body,
     ContentType: contentType,
   });
-  return s3.send(command);
+  return internalS3.send(command);
 }
 
 export async function deleteFromS3(key: string) {
@@ -38,7 +48,7 @@ export async function deleteFromS3(key: string) {
     Bucket: BUCKET_NAME,
     Key: key,
   });
-  return s3.send(command);
+  return internalS3.send(command);
 }
 
 export async function getPresignedUrl(key: string) {
@@ -46,5 +56,5 @@ export async function getPresignedUrl(key: string) {
     Bucket: BUCKET_NAME,
     Key: key,
   });
-  return getSignedUrl(s3, command, { expiresIn: 3600 });
+  return getSignedUrl(signerS3, command, { expiresIn: 3600 });
 }

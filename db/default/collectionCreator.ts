@@ -7,7 +7,6 @@ import {
   collections as collectionsTable,
 } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { Collection } from "@/db/default/setup";
 import { Locale } from "@/i18n/config";
 
 export async function createDefaultCollectionsForUser(

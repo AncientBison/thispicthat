@@ -4,7 +4,6 @@ import sharp from "sharp";
 import db from "@/db";
 import { items } from "@/db/schema";
 import env from "@/env";
-import { Collection } from "@/db/default/setup";
 import { Locale, locales } from "@/i18n/config";
 import { uploadToS3 } from "@/db/s3";
 
@@ -29,9 +28,28 @@ export async function createDefaultItems() {
         fileName
       );
 
-      const s3Key = `${crypto.randomUUID()}.webp`;
+      let existingS3Key: string | null = null;
 
-      let anyOfItemExists = false;
+      for (const language of locales) {
+        const existing = await db.query.items.findFirst({
+          where: (item, { eq, isNull, and }) =>
+            and(
+              eq(item.name, itemData.name[language]),
+              eq(item.language, language),
+              isNull(item.userId),
+              eq(item.defaultItemCollectionName, collection.name[language])
+            ),
+          columns: { image: true },
+        });
+
+        if (existing) {
+          existingS3Key = existing.image;
+          break;
+        }
+      }
+
+      const s3Key = existingS3Key ?? `${crypto.randomUUID()}.webp`;
+      const needsUpload = existingS3Key === null;
 
       for (const language of locales) {
         const existing = await db.query.items.findFirst({
@@ -46,8 +64,6 @@ export async function createDefaultItems() {
         });
 
         if (existing) {
-          anyOfItemExists = true;
-
           console.info(
             `Default item already exists for ${itemData.name[language]} (${language}), skipping creation.`
           );
@@ -65,7 +81,7 @@ export async function createDefaultItems() {
         console.log(`Seeded item: ${itemData.name[language]}`);
       }
 
-      if (!anyOfItemExists) {
+      if (needsUpload) {
         const buffer = await fs.promises.readFile(filePath);
 
         const processedImage = await sharp(buffer)

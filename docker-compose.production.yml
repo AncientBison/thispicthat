@@ -21,7 +21,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.garage
-    pull_policy: never
     restart: always
     volumes:
       - garage_data:/var/lib/garage
@@ -38,7 +37,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.init
-    pull_policy: never
     depends_on:
       garage:
         condition: service_healthy
@@ -52,7 +50,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.migration
-    pull_policy: never
     depends_on:
       garage-init:
         condition: service_completed_successfully
@@ -71,6 +68,12 @@ services:
       context: .
       dockerfile: Dockerfile
     pull_policy: never
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 2
+      update_config:
+        order: start-first
     depends_on:
       setup:
         condition: service_completed_successfully

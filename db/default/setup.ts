@@ -1,5 +1,4 @@
 import { createDefaultItems } from "@/db/default/itemCreator";
-import { locales } from "@/i18n/config";
 
 export type Collection = {
   name: string;
@@ -7,7 +6,5 @@ export type Collection = {
 };
 
 (async () => {
-  for (const locale of locales) {
-    await createDefaultItems(locale);
-  }
+  await createDefaultItems();
 })();

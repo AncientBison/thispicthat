@@ -5,18 +5,18 @@ import db from "@/db";
 import { items } from "@/db/schema";
 import env from "@/env";
 import { Collection } from "@/db/default/setup";
-import { Locale } from "@/i18n/config";
+import { Locale, locales } from "@/i18n/config";
 import { uploadToS3 } from "@/db/s3";
 
-export async function createDefaultItems(language: Locale) {
-  const langPath = path.resolve(
-    process.cwd(),
-    "db",
-    "default",
-    `${language}.json`
-  );
-  const raw = await fs.promises.readFile(langPath, "utf-8");
-  const collections: Collection[] = JSON.parse(raw);
+export async function createDefaultItems() {
+  const itemsPath = path.resolve(process.cwd(), "db", "default", "items.json");
+
+  const raw = await fs.promises.readFile(itemsPath, "utf-8");
+  const collections: {
+    name: { [key in Locale]: string };
+    id: string;
+    items: { name: { [key in Locale]: string }; fileName: string }[];
+  }[] = JSON.parse(raw);
 
   for (const collection of collections) {
     for (const itemData of collection.items) {
@@ -29,26 +29,43 @@ export async function createDefaultItems(language: Locale) {
         fileName
       );
 
-      try {
-        // 1. Check if item already exists in DB
+      const s3Key = `${crypto.randomUUID()}.webp`;
+
+      let anyOfItemExists = false;
+
+      for (const language of locales) {
         const existing = await db.query.items.findFirst({
           where: (item, { eq, isNull, and }) =>
             and(
-              eq(item.name, itemData.name),
+              eq(item.name, itemData.name[language]),
               eq(item.language, language),
-              isNull(item.userId)
+              isNull(item.userId),
+              eq(item.defaultItemCollectionName, collection.name[language])
             ),
           columns: { id: true },
         });
 
         if (existing) {
+          anyOfItemExists = true;
+
           console.info(
-            `Default item already exists for ${itemData.name} (${language}), skipping creation.`
+            `Default item already exists for ${itemData.name[language]} (${language}), skipping creation.`
           );
           continue;
         }
 
-        // 2. Read and Process Image
+        await db.insert(items).values({
+          userId: null,
+          name: itemData.name[language],
+          image: s3Key,
+          language,
+          defaultItemCollectionName: collection.name[language],
+        });
+
+        console.log(`Seeded item: ${itemData.name[language]}`);
+      }
+
+      if (!anyOfItemExists) {
         const buffer = await fs.promises.readFile(filePath);
 
         const processedImage = await sharp(buffer)
@@ -61,27 +78,9 @@ export async function createDefaultItems(language: Locale) {
           .toFormat("webp", { quality: 80, effort: 4 })
           .toBuffer();
 
-        // 3. Generate S3 Key and Upload
-        // We use a UUID to ensure no collisions in the bucket
-        const s3Key = `${crypto.randomUUID()}.webp`;
-        
         await uploadToS3(s3Key, processedImage, "image/webp");
 
-        // 4. Insert into DB with the S3 Key
-        await db.insert(items).values({
-          userId: null,
-          name: itemData.name,
-          image: s3Key, // Store the string key, not the buffer
-          language,
-        });
-
-        console.log(`Seeded item: ${itemData.name}`);
-
-      } catch (error) {
-        console.error(
-          `Failed to create item for ${itemData.name} from ${filePath}:`,
-          error
-        );
+        console.log(`Seeded image: ${itemData.fileName}`);
       }
     }
   }

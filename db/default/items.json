@@ -1,0 +1,590 @@
+[
+  {
+    "id": "furniture",
+    "name": {
+      "en": "Furniture",
+      "fr": "Meubles",
+      "es": "Muebles"
+    },
+    "items": [
+      {
+        "name": {
+          "en": "Chair",
+          "fr": "Chaise",
+          "es": "Silla"
+        },
+        "fileName": "chair"
+      },
+      {
+        "name": {
+          "en": "Table",
+          "fr": "Table",
+          "es": "Mesa"
+        },
+        "fileName": "table"
+      },
+      {
+        "name": {
+          "en": "Sofa",
+          "fr": "Canapé",
+          "es": "Sofá"
+        },
+        "fileName": "sofa"
+      },
+      {
+        "name": {
+          "en": "Bed",
+          "fr": "Lit",
+          "es": "Cama"
+        },
+        "fileName": "bed"
+      },
+      {
+        "name": {
+          "en": "Desk",
+          "fr": "Bureau",
+          "es": "Escritorio"
+        },
+        "fileName": "desk"
+      },
+      {
+        "name": {
+          "en": "Cabinet",
+          "fr": "Armoire",
+          "es": "Gabinete"
+        },
+        "fileName": "cabinet"
+      },
+      {
+        "name": {
+          "en": "Wardrobe",
+          "fr": "Garde-robe",
+          "es": "Armario"
+        },
+        "fileName": "wardrobe"
+      },
+      {
+        "name": {
+          "en": "Alarm Clock",
+          "fr": "Réveil",
+          "es": "Reloj despertador"
+        },
+        "fileName": "alarm_clock"
+      },
+      {
+        "name": {
+          "en": "Lamp",
+          "fr": "Lampe",
+          "es": "Lámpara"
+        },
+        "fileName": "lamp"
+      },
+      {
+        "name": {
+          "en": "Bookshelf",
+          "fr": "Bibliothèque",
+          "es": "Estantería"
+        },
+        "fileName": "bookshelf"
+      }
+    ]
+  },
+  {
+    "id": "vehicles",
+    "name": {
+      "en": "Vehicles",
+      "fr": "Véhicules",
+      "es": "Vehículos"
+    },
+    "items": [
+      {
+        "name": {
+          "en": "Car",
+          "fr": "Voiture",
+          "es": "Coche"
+        },
+        "fileName": "car"
+      },
+      {
+        "name": {
+          "en": "Bicycle",
+          "fr": "Vélo",
+          "es": "Bicicleta"
+        },
+        "fileName": "bicycle"
+      },
+      {
+        "name": {
+          "en": "Motorcycle",
+          "fr": "Moto",
+          "es": "Motocicleta"
+        },
+        "fileName": "motorcycle"
+      },
+      {
+        "name": {
+          "en": "Airplane",
+          "fr": "Avion",
+          "es": "Avión"
+        },
+        "fileName": "airplane"
+      },
+      {
+        "name": {
+          "en": "Boat",
+          "fr": "Bateau",
+          "es": "Barco"
+        },
+        "fileName": "boat"
+      },
+      {
+        "name": {
+          "en": "Bus",
+          "fr": "Bus",
+          "es": "Autobús"
+        },
+        "fileName": "bus"
+      },
+      {
+        "name": {
+          "en": "Train",
+          "fr": "Train",
+          "es": "Tren"
+        },
+        "fileName": "train"
+      },
+      {
+        "name": {
+          "en": "Truck",
+          "fr": "Camion",
+          "es": "Camión"
+        },
+        "fileName": "truck"
+      },
+      {
+        "name": {
+          "en": "Scooter",
+          "fr": "Trottinette",
+          "es": "Scooter"
+        },
+        "fileName": "scooter"
+      },
+      {
+        "name": {
+          "en": "Helicopter",
+          "fr": "Hélicoptère",
+          "es": "Helicóptero"
+        },
+        "fileName": "helicopter"
+      }
+    ]
+  },
+  {
+    "id": "instruments",
+    "name": {
+      "en": "Instruments",
+      "fr": "Instruments",
+      "es": "Instrumentos"
+    },
+    "items": [
+      {
+        "name": {
+          "en": "Guitar",
+          "fr": "Guitare",
+          "es": "Guitarra"
+        },
+        "fileName": "guitar"
+      },
+      {
+        "name": {
+          "en": "Piano",
+          "fr": "Piano",
+          "es": "Piano"
+        },
+        "fileName": "piano"
+      },
+      {
+        "name": {
+          "en": "Drums",
+          "fr": "Batterie",
+          "es": "Batería"
+        },
+        "fileName": "drums"
+      },
+      {
+        "name": {
+          "en": "Violin",
+          "fr": "Violon",
+          "es": "Violín"
+        },
+        "fileName": "violin"
+      },
+      {
+        "name": {
+          "en": "Flute",
+          "fr": "Flûte",
+          "es": "Flauta"
+        },
+        "fileName": "flute"
+      },
+      {
+        "name": {
+          "en": "Trumpet",
+          "fr": "Trompette",
+          "es": "Trompeta"
+        },
+        "fileName": "trumpet"
+      },
+      {
+        "name": {
+          "en": "Saxophone",
+          "fr": "Saxophone",
+          "es": "Saxofón"
+        },
+        "fileName": "saxophone"
+      },
+      {
+        "name": {
+          "en": "Cello",
+          "fr": "Violoncelle",
+          "es": "Violonchelo"
+        },
+        "fileName": "cello"
+      },
+      {
+        "name": {
+          "en": "Harp",
+          "fr": "Harpe",
+          "es": "Arpa"
+        },
+        "fileName": "harp"
+      },
+      {
+        "name": {
+          "en": "Accordion",
+          "fr": "Accordéon",
+          "es": "Acordeón"
+        },
+        "fileName": "accordion"
+      }
+    ]
+  },
+  {
+    "id": "food",
+    "name": {
+      "en": "Food",
+      "fr": "Nourriture",
+      "es": "Comida"
+    },
+    "items": [
+      {
+        "name": {
+          "en": "Apple",
+          "fr": "Pomme",
+          "es": "Manzana"
+        },
+        "fileName": "apple"
+      },
+      {
+        "name": {
+          "en": "Sandwich",
+          "fr": "Sandwich",
+          "es": "Sándwich"
+        },
+        "fileName": "sandwich"
+      },
+      {
+        "name": {
+          "en": "Water",
+          "fr": "Eau",
+          "es": "Agua"
+        },
+        "fileName": "water"
+      },
+      {
+        "name": {
+          "en": "Coffee",
+          "fr": "Café",
+          "es": "Café"
+        },
+        "fileName": "coffee"
+      },
+      {
+        "name": {
+          "en": "Tea",
+          "fr": "Thé",
+          "es": "Té"
+        },
+        "fileName": "tea"
+      },
+      {
+        "name": {
+          "en": "Milk",
+          "fr": "Lait",
+          "es": "Leche"
+        },
+        "fileName": "milk"
+      },
+      {
+        "name": {
+          "en": "Butter",
+          "fr": "Beurre",
+          "es": "Mantequilla"
+        },
+        "fileName": "butter"
+      },
+      {
+        "name": {
+          "en": "Banana",
+          "fr": "Banane",
+          "es": "Banana"
+        },
+        "fileName": "banana"
+      },
+      {
+        "name": {
+          "en": "Bread",
+          "fr": "Pain",
+          "es": "Pan"
+        },
+        "fileName": "bread"
+      },
+      {
+        "name": {
+          "en": "Cheese",
+          "fr": "Fromage",
+          "es": "Queso"
+        },
+        "fileName": "cheese"
+      },
+      {
+        "name": {
+          "en": "Eggs",
+          "fr": "Œufs",
+          "es": "Huevos"
+        },
+        "fileName": "eggs"
+      },
+      {
+        "name": {
+          "en": "Fish",
+          "fr": "Poisson",
+          "es": "Pescado"
+        },
+        "fileName": "fish_food"
+      },
+      {
+        "name": {
+          "en": "Grapes",
+          "fr": "Raisins",
+          "es": "Uvas"
+        },
+        "fileName": "grapes"
+      },
+      {
+        "name": {
+          "en": "Ice Cream",
+          "fr": "Glace",
+          "es": "Helado"
+        },
+        "fileName": "ice_cream"
+      },
+      {
+        "name": {
+          "en": "Juice",
+          "fr": "Jus",
+          "es": "Jugo"
+        },
+        "fileName": "juice"
+      },
+      {
+        "name": {
+          "en": "Meat",
+          "fr": "Viande",
+          "es": "Carne"
+        },
+        "fileName": "meat"
+      }
+    ]
+  },
+  {
+    "id": "jobs",
+    "name": {
+      "en": "Jobs",
+      "fr": "Métiers",
+      "es": "Profesiones"
+    },
+    "items": [
+      {
+        "name": {
+          "en": "Doctor",
+          "fr": "Médecin",
+          "es": "Médico"
+        },
+        "fileName": "doctor"
+      },
+      {
+        "name": {
+          "en": "Teacher",
+          "fr": "Professeur",
+          "es": "Profesor"
+        },
+        "fileName": "teacher"
+      },
+      {
+        "name": {
+          "en": "Engineer",
+          "fr": "Ingénieur",
+          "es": "Ingeniero"
+        },
+        "fileName": "engineer"
+      },
+      {
+        "name": {
+          "en": "Chef",
+          "fr": "Chef",
+          "es": "Chef"
+        },
+        "fileName": "chef"
+      },
+      {
+        "name": {
+          "en": "Artist",
+          "fr": "Artiste",
+          "es": "Artista"
+        },
+        "fileName": "artist"
+      },
+      {
+        "name": {
+          "en": "Farmer",
+          "fr": "Fermier",
+          "es": "Granjero"
+        },
+        "fileName": "farmer"
+      },
+      {
+        "name": {
+          "en": "Pilot",
+          "fr": "Pilote",
+          "es": "Piloto"
+        },
+        "fileName": "pilot"
+      },
+      {
+        "name": {
+          "en": "Nurse",
+          "fr": "Infirmier",
+          "es": "Enfermero"
+        },
+        "fileName": "nurse"
+      },
+      {
+        "name": {
+          "en": "Firefighter",
+          "fr": "Pompier",
+          "es": "Bombero"
+        },
+        "fileName": "firefighter"
+      },
+      {
+        "name": {
+          "en": "Police Officer",
+          "fr": "Policier",
+          "es": "Policía"
+        },
+        "fileName": "police_officer"
+      }
+    ]
+  },
+  {
+    "id": "animals",
+    "name": {
+      "en": "Animals",
+      "fr": "Animaux",
+      "es": "Animales"
+    },
+    "items": [
+      {
+        "name": {
+          "en": "Dog",
+          "fr": "Chien",
+          "es": "Perro"
+        },
+        "fileName": "dog"
+      },
+      {
+        "name": {
+          "en": "Cat",
+          "fr": "Chat",
+          "es": "Gato"
+        },
+        "fileName": "cat"
+      },
+      {
+        "name": {
+          "en": "Bird",
+          "fr": "Oiseau",
+          "es": "Pájaro"
+        },
+        "fileName": "bird"
+      },
+      {
+        "name": {
+          "en": "Fish",
+          "fr": "Poisson",
+          "es": "Pez"
+        },
+        "fileName": "fish_animal"
+      },
+      {
+        "name": {
+          "en": "Horse",
+          "fr": "Cheval",
+          "es": "Caballo"
+        },
+        "fileName": "horse"
+      },
+      {
+        "name": {
+          "en": "Cow",
+          "fr": "Vache",
+          "es": "Vaca"
+        },
+        "fileName": "cow"
+      },
+      {
+        "name": {
+          "en": "Pig",
+          "fr": "Cochon",
+          "es": "Cerdo"
+        },
+        "fileName": "pig"
+      },
+      {
+        "name": {
+          "en": "Bear",
+          "fr": "Ours",
+          "es": "Oso"
+        },
+        "fileName": "bear"
+      },
+      {
+        "name": {
+          "en": "Sheep",
+          "fr": "Mouton",
+          "es": "Oveja"
+        },
+        "fileName": "sheep"
+      },
+      {
+        "name": {
+          "en": "Lizard",
+          "fr": "Lézard",
+          "es": "Lagarto"
+        },
+        "fileName": "lizard"
+      }
+    ]
+  }
+]

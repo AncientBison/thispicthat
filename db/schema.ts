@@ -34,6 +34,7 @@ export const items = pgTable("item", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
+  defaultItemCollectionName: text("default_item_collection_name"),
   name: text("name").notNull(),
   image: text("image").notNull(),
   language: language("language"),

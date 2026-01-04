@@ -15,64 +15,27 @@ export async function createDefaultCollectionsForUser(
   learningLanguage: Locale,
   nativeLanguage: Locale
 ) {
-  const languagePath = path.resolve(
+  const itemsPath = path.resolve(
     process.cwd(),
     "db",
     "default",
-    `${learningLanguage}.json`
+    "items.json"
   );
-  const raw = await fs.promises.readFile(languagePath, "utf-8");
-  const collections: Collection[] = JSON.parse(raw);
-
-  const nativeLanguagePath = path.resolve(
-    process.cwd(),
-    "db",
-    "default",
-    `${nativeLanguage}.json`
-  );
-  let nativeCollections: Collection[] = [];
-  try {
-    const nativeRaw = await fs.promises.readFile(nativeLanguagePath, "utf-8");
-    nativeCollections = JSON.parse(nativeRaw);
-  } catch (err) {
-    console.warn(
-      `Could not read native language defaults for ${nativeLanguage}:`,
-      err
-    );
-  }
+  const raw = await fs.promises.readFile(itemsPath, "utf-8");
+  const collections: {
+    name: { [key in Locale]: string };
+    id: string;
+    items: { name: { [key in Locale]: string }; fileName: string }[];
+  }[] = JSON.parse(raw);
 
   for (const collection of collections) {
     try {
-      let nativeName: string | undefined;
-      if (nativeCollections.length > 0) {
-        const learningFileNames = new Set(
-          collection.items.map((i) => (i as any).fileName).filter(Boolean)
-        );
+      const learningName = collection.name[learningLanguage];
+      const nativeName = collection.name[nativeLanguage];
 
-        let bestIndex = -1;
-        let bestMatches = 0;
-        nativeCollections.forEach((nativeCollection, idx) => {
-          const nativeFileNames = new Set(
-            nativeCollection.items.map((item) => item.fileName).filter(Boolean)
-          );
-          let matches = 0;
-          learningFileNames.forEach((fileName) => {
-            if (nativeFileNames.has(fileName)) matches++;
-          });
-          if (matches > bestMatches) {
-            bestMatches = matches;
-            bestIndex = idx;
-          }
-        });
-
-        if (bestIndex >= 0 && bestMatches > 0) {
-          nativeName = nativeCollections[bestIndex].name;
-        }
-      }
-
-      const finalName = nativeName
-        ? `${collection.name} (${nativeName})`
-        : collection.name;
+      const finalName = nativeName && nativeName !== learningName
+        ? `${learningName} (${nativeName})`
+        : learningName;
 
       const insertResult = await db
         .insert(collectionsTable)
@@ -81,20 +44,19 @@ export async function createDefaultCollectionsForUser(
 
       const created = insertResult[0];
 
-      const itemNames = collection.items.map((item) => item.name);
       const rows = await db.query.items.findMany({
-        where: (item, { or, and, isNull }) =>
+        where: (item, { and, isNull }) =>
           and(
-            or(...itemNames.map((name) => eq(item.name, name))),
             isNull(item.userId),
-            eq(item.language, learningLanguage)
+            eq(item.language, learningLanguage),
+            eq(item.defaultItemCollectionName, learningName)
           ),
         columns: { id: true, name: true },
       });
 
       if (rows.length === 0) {
         throw new Error(
-          `No items found for default collection ${collection.name}`
+          `No items found for default collection ${learningName}`
         );
       }
 
@@ -102,7 +64,8 @@ export async function createDefaultCollectionsForUser(
 
       const collectionItemRows = collection.items
         .map((item) => {
-          const itemId = nameToId.get(item.name);
+          const itemName = item.name[learningLanguage];
+          const itemId = nameToId.get(itemName);
           if (!itemId) return null;
           return { collectionId: created.id, itemId };
         })
@@ -113,7 +76,7 @@ export async function createDefaultCollectionsForUser(
       }
     } catch (error) {
       console.error(
-        `Failed to create collection ${collection.name} for user ${userId}:`,
+        `Failed to create collection ${collection.name[learningLanguage]} for user ${userId}:`,
         error
       );
     }

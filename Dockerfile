@@ -7,13 +7,9 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci --include=dev; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY package.json .npmrc* ./
+
+RUN npm install
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
@@ -21,7 +17,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# S3 Args with default fallbacks (so build doesn't fail if they aren't passed)
+# S3 Args
 ARG S3_ENDPOINT="http://build-time-placeholder"
 ARG S3_REGION="garage"
 ARG S3_BUCKET="placeholder-bucket"
@@ -29,7 +25,6 @@ ARG S3_ACCESS_KEY_ID="placeholder-key"
 ARG S3_SECRET_ACCESS_KEY="placeholder-secret"
 ARG S3_FORCE_PATH_STYLE="true"
 
-# Map ARGs to ENVs so Next.js can see them during 'npm run build'
 ENV S3_ENDPOINT=$S3_ENDPOINT
 ENV S3_REGION=$S3_REGION
 ENV S3_BUCKET=$S3_BUCKET
@@ -41,11 +36,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN \
   set -a && . ./stack.env && set +a && \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+  npm run build
 
 FROM base AS runner
 WORKDIR /app

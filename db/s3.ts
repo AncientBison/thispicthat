@@ -32,13 +32,15 @@ const BUCKET_NAME = env.S3_BUCKET;
 export async function uploadToS3(
   key: string,
   body: Buffer | Uint8Array | Blob,
-  contentType: string
+  contentType: string,
+  cacheControl: string = "public, max-age=31536000, immutable"
 ) {
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
     Key: key,
     Body: body,
     ContentType: contentType,
+    CacheControl: cacheControl,
   });
   return internalS3.send(command);
 }

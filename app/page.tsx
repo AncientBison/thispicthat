@@ -12,8 +12,6 @@ import NewCollectionModal from "@/components/newCollectionModal";
 import { getUserSettings } from "@/db/user";
 
 export default async function Home() {
-  const itemsPromise = getItems();
-  const collectionsDataPromise = getCollectionsData();
   const session = await auth();
 
   if (!session) {
@@ -25,6 +23,9 @@ export default async function Home() {
   } catch (error) {
     redirect("/welcome");
   }
+
+  const itemsPromise = getItems();
+  const collectionsDataPromise = getCollectionsData();
 
   return (
     <>

@@ -22,7 +22,7 @@ export async function translateText(
     const result = (await translation(text, {
       src_lang: localeToLanguageCode(sourceLocale),
       tgt_lang: localeToLanguageCode(targetLocale),
-    })) as TranslationOutput;
+    } as any)) as TranslationOutput;
 
     return result[0].translation_text.charAt(0).toUpperCase() + result[0].translation_text.slice(1);
   } catch (err) {

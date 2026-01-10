@@ -1,28 +1,31 @@
-import { pipeline } from "@huggingface/transformers";
+import { pipeline, ImageToTextPipeline, Text2TextGenerationPipeline, TranslationPipeline } from "@huggingface/transformers";
 
 declare global {
-  var imageCaptioningCache: Awaited<ReturnType<typeof pipeline>> | undefined;
-  var textGenerationCache: Awaited<ReturnType<typeof pipeline>> | undefined;
-  var translationCache: Awaited<ReturnType<typeof pipeline>> | undefined;
+  var imageCaptioningCache: ImageToTextPipeline | undefined;
+  var textGenerationCache: Text2TextGenerationPipeline | undefined;
+  var translationCache: TranslationPipeline | undefined;
 }
 
-async function getImageCaptioning() {
+async function getImageCaptioning(): Promise<ImageToTextPipeline> {
   if (!globalThis.imageCaptioningCache) {
-    globalThis.imageCaptioningCache = await pipeline("image-to-text", "Xenova/vit-gpt2-image-captioning");
+    const pipe = await pipeline("image-to-text", "Xenova/vit-gpt2-image-captioning");
+    globalThis.imageCaptioningCache = pipe as ImageToTextPipeline;
   }
   return globalThis.imageCaptioningCache;
 }
 
-async function getTextGeneration() {
+async function getTextGeneration(): Promise<Text2TextGenerationPipeline> {
   if (!globalThis.textGenerationCache) {
-    globalThis.textGenerationCache = await pipeline("text2text-generation", "Xenova/flan-t5-small");
+    const pipe = await pipeline("text2text-generation", "Xenova/flan-t5-small");
+    globalThis.textGenerationCache = pipe as Text2TextGenerationPipeline;
   }
   return globalThis.textGenerationCache;
 }
 
-async function getTranslation() {
+async function getTranslation(): Promise<TranslationPipeline> {
   if (!globalThis.translationCache) {
-    globalThis.translationCache = await pipeline("translation", "Xenova/nllb-200-distilled-600M");
+    const pipe = await pipeline("translation", "Xenova/nllb-200-distilled-600M");
+    globalThis.translationCache = pipe as TranslationPipeline;
   }
   return globalThis.translationCache;
 }

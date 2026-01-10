@@ -9,7 +9,7 @@ import env from "@/env";
 
 const internalS3 = new S3Client({
   region: env.S3_REGION,
-  endpoint: env.S3_ENDPOINT, 
+  endpoint: env.S3_ENDPOINT,
   credentials: {
     accessKeyId: env.S3_ACCESS_KEY_ID,
     secretAccessKey: env.S3_SECRET_ACCESS_KEY,
@@ -26,7 +26,7 @@ const signerS3 = new S3Client({
   },
   forcePathStyle: true,
 });
- 
+
 const BUCKET_NAME = env.S3_BUCKET;
 
 export async function uploadToS3(

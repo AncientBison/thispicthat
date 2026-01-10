@@ -130,3 +130,25 @@ export async function getItemsImages(itemIds: string[]) {
 
   return new Map(rowsWithUrls);
 }
+
+export async function uploadImageForIdentification(image: File): Promise<string> {
+  const userId = await getUserIdOrThrow();
+
+  const buffer = Buffer.from(await image.arrayBuffer());
+
+  const processedImage = await sharp(buffer)
+    .resize({
+      width: env.MAX_IMAGE_DIMENSION,
+      height: env.MAX_IMAGE_DIMENSION,
+      fit: "inside",
+      withoutEnlargement: true,
+    })
+    .toFormat("webp", { quality: 80, effort: 4 })
+    .toBuffer();
+
+  const fileKey = `temp/${crypto.randomUUID()}.webp`;
+
+  await uploadToS3(fileKey, processedImage, "image/webp");
+
+  return fileKey;
+}

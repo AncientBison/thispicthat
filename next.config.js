@@ -5,6 +5,7 @@ import createNextIntlPlugin from "next-intl/plugin";
  */
 export const nextConfig = {
   output: "standalone",
+  serverExternalPackages: ["@huggingface/transformers", "onnxruntime-node"],
 };
 
 const withNextIntl = createNextIntlPlugin();

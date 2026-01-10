@@ -18,7 +18,18 @@
     "itemNamePlaceholder": "Nom d'objet",
     "itemCreated": "Objet créé",
     "errorCreatingItem": "Erreur de création d'objet",
-    "create": "Créer"
+    "create": "Créer",
+    "identifyWithAI": "Identifier avec l'IA",
+    "identificationError": "Échec de l'identification de l'image",
+    "identifyWithTranslate": "Traduire le nom",
+    "translationError": "Échec de la traduction du texte",
+    "namingMode": "Mode de Dénomination",
+    "aiModeTitle": "Mode IA",
+    "aiModeDescription": "Identifier le nom de l'objet à partir de l'image en utilisant l'IA",
+    "translateModeTitle": "Mode de Traduction",
+    "translateModeDescription": "Traduire le nom de l'objet depuis votre langue maternelle",
+    "manualModeTitle": "Mode Manuel",
+    "manualModeDescription": "Entrer le nom de l'objet manuellement"
   },
   "Error": {
     "errorText": "Quelque chose s'est mal passé!",

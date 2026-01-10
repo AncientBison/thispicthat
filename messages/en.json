@@ -23,7 +23,18 @@
     "itemNamePlaceholder": "Item name",
     "itemCreated": "Item created",
     "errorCreatingItem": "Error creating item",
-    "create": "Create"
+    "create": "Create",
+    "identifyWithAI": "Identify with AI",
+    "identificationError": "Failed to identify image",
+    "identifyWithTranslate": "Translate name",
+    "translationError": "Failed to translate text",
+    "namingMode": "Naming Mode",
+    "aiModeTitle": "AI Mode",
+    "aiModeDescription": "Identify the item's name from the image using AI",
+    "translateModeTitle": "Translate Mode",
+    "translateModeDescription": "Translate the item's name from your native language",
+    "manualModeTitle": "Manual Mode",
+    "manualModeDescription": "Enter the item's name manually"
   },
   "CollectionAddModal": {
     "title": "Add to collection",

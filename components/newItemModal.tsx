@@ -15,28 +15,16 @@ import {
 } from "@heroui/modal";
 import { useAtom, useSetAtom } from "jotai";
 import { Divider } from "@heroui/divider";
-import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Spinner } from "@heroui/spinner";
 import { Form } from "@heroui/form";
 import ImageUpload from "@/components/imageUpload";
+import ItemNameInput from "@/components/itemNameInput";
 import { useCallback, useState } from "react";
 import { createItemEntry } from "@/db/items";
 import imageCompression from "browser-image-compression";
 import { addToast } from "@heroui/toast";
 import { useTranslations } from "next-intl";
-
-const toBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const result = reader.result as string;
-      const base64 = result.split(",")[1] || "";
-      resolve(base64);
-    };
-    reader.onerror = reject;
-  });
 
 export default function NewItemModal() {
   const [isOpen, setIsOpen] = useAtom(newItemModalOpenAtom);
@@ -60,7 +48,10 @@ export default function NewItemModal() {
           useWebWorker: true,
           fileType: "image/webp",
         });
-        const { id, imageUrl } = await createItemEntry({ name, image: processedImage });
+        const { id, imageUrl } = await createItemEntry({
+          name,
+          image: processedImage,
+        });
         addToast({ color: "success", title: t("itemCreated") });
         onClose && onClose();
 
@@ -93,18 +84,11 @@ export default function NewItemModal() {
               <ModalBody className="w-full">
                 <ImageUpload onUpload={(file) => setItemImage(file)} />
                 <Divider />
-                <Input
-                  classNames={{
-                    input: "font-bold text-2xl",
-                    inputWrapper: "h-auto min-h-0 py-2",
-                    label: "",
-                  }}
-                  className="pb-2"
-                  size="lg"
-                  variant="faded"
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={t("itemNamePlaceholder")}
-                  isRequired
+                <ItemNameInput
+                  name={name}
+                  onNameChange={setName}
+                  image={image}
+                  disabled={loading}
                 />
                 <button type="submit" className="hidden" aria-hidden />
               </ModalBody>

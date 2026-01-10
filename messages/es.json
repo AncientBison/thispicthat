@@ -23,7 +23,18 @@
     "itemNamePlaceholder": "Nombre del elemento",
     "itemCreated": "Elemento creado",
     "errorCreatingItem": "Error al crear el elemento",
-    "create": "Crear"
+    "create": "Crear",
+    "identifyWithAI": "Identificar con IA",
+    "identificationError": "Error al identificar la imagen",
+    "identifyWithTranslate": "Traducir nombre",
+    "translationError": "Error al traducir el texto",
+    "namingMode": "Modo de Nombrado",
+    "aiModeTitle": "Modo IA",
+    "aiModeDescription": "Identificar el nombre del elemento a partir de la imagen usando IA",
+    "translateModeTitle": "Modo de Traducción",
+    "translateModeDescription": "Traducir el nombre del elemento desde tu idioma nativo",
+    "manualModeTitle": "Modo Manual",
+    "manualModeDescription": "Introducir el nombre del elemento manualmente"
   },
   "CollectionAddModal": {
     "title": "Agregar a la colección",

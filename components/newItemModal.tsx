@@ -35,6 +35,7 @@ export default function NewItemModal() {
   const [image] = useAtom(itemImageAtom);
   const setItems = useSetAtom(itemsAtom);
   const [loading, setLoading] = useState(false);
+  const [actionUsed, setActionUsed] = useState(false);
 
   const t = useTranslations("NewItemModal");
 
@@ -78,7 +79,7 @@ export default function NewItemModal() {
               className="w-full"
               onSubmit={(e) => {
                 e.preventDefault();
-                handleSubmit(onClose);
+                if (actionUsed) {handleSubmit(onClose);}
               }}
             >
               <ModalBody className="w-full">
@@ -89,6 +90,7 @@ export default function NewItemModal() {
                   onNameChange={setName}
                   image={image}
                   disabled={loading}
+                  onActionUsed={setActionUsed}
                 />
                 <button type="submit" className="hidden" aria-hidden />
               </ModalBody>

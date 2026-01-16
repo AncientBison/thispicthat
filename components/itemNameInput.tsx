@@ -18,11 +18,13 @@ export default function ItemNameInput({
   onNameChange,
   image,
   disabled = false,
+  onActionUsed,
 }: {
   name: string;
   onNameChange: (name: string) => void;
   image: File | null;
   disabled?: boolean;
+  onActionUsed: (used: boolean) => void;
 }) {
   const t = useTranslations("NewItemModal");
   const [nameLoading, setNameLoading] = useState(false);
@@ -63,6 +65,7 @@ export default function ItemNameInput({
       addToast({ color: "danger", title: t("identificationError") });
     } finally {
       setNameLoading(false);
+      onActionUsed(true);
     }
   }, [image, onNameChange, t]);
 
@@ -78,6 +81,7 @@ export default function ItemNameInput({
       addToast({ color: "danger", title: t("translationError") });
     } finally {
       setNameLoading(false);
+      onActionUsed(true);
     }
   }, [name, onNameChange, t]);
 
@@ -89,7 +93,10 @@ export default function ItemNameInput({
         size="lg"
         variant="faded"
         selectedKeys={[nameMode]}
-        onSelectionChange={(value) => setNameMode(value.currentKey!)}
+        onSelectionChange={(value) => {
+          setNameMode(value.currentKey!);
+          onActionUsed(value.currentKey === "manual");
+        }}
         disallowEmptySelection
       >
         {selectModes.map((selectMode) => (

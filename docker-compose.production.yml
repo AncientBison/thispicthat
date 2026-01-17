@@ -46,6 +46,17 @@ services:
       - app-network
     env_file: [stack.env]
 
+  comfyui:
+    image: zeroclue/comfyui:ultra-slim-torch2.8.0-cu128
+    restart: always
+    ports:
+      - "8188:8188"
+    volumes:
+      - comfyui_data:/data
+    networks:
+      - app-network
+    env_file: [stack.env]
+
   setup:
     build:
       context: .
@@ -102,6 +113,7 @@ volumes:
   pgdata: {}
   garage_data: {}
   app_secrets: {}
+  comfyui_data: {}
 
 networks:
   app-network:

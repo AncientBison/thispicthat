@@ -21,6 +21,14 @@ services:
       - garage_data_dev:/var/lib/garage
     command: /garage server
 
+  comfyui:
+    image: zeroclue/comfyui:ultra-slim-torch2.8.0-cu128
+    ports:
+      - "8188:8188"
+    volumes:
+      - comfyui_data_dev:/data
+
 volumes:
   pg_data_dev:
   garage_data_dev:
+  comfyui_data_dev:

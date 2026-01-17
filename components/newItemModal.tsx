@@ -22,6 +22,7 @@ import ImageUpload from "@/components/imageUpload";
 import ItemNameInput from "@/components/itemNameInput";
 import { useCallback, useState } from "react";
 import { createItemEntry } from "@/db/items";
+import { generateImage } from "@/ai/generateImage";
 import imageCompression from "browser-image-compression";
 import { addToast } from "@heroui/toast";
 import { useTranslations } from "next-intl";
@@ -35,9 +36,35 @@ export default function NewItemModal() {
   const [image] = useAtom(itemImageAtom);
   const setItems = useSetAtom(itemsAtom);
   const [loading, setLoading] = useState(false);
+  const [generatingImage, setGeneratingImage] = useState(false);
   const [actionUsed, setActionUsed] = useState(false);
 
   const t = useTranslations("NewItemModal");
+
+  const handleGenerateImage = useCallback(async () => {
+    if (!name) {
+      addToast({ color: "warning", title: t("enterNameFirst") });
+      return;
+    }
+
+    setGeneratingImage(true);
+    try {
+      const { imageUrl } = await generateImage(name);
+      
+      // Fetch the generated image and convert to File
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], `${name}.webp`, { type: "image/webp" });
+      
+      setItemImage(file);
+      addToast({ color: "success", title: t("imageGenerated") });
+    } catch (error) {
+      console.error(error);
+      addToast({ color: "danger", title: t("errorGeneratingImage") });
+    } finally {
+      setGeneratingImage(false);
+    }
+  }, [name, setItemImage, t]);
 
   const handleSubmit = useCallback(
     async (onClose?: () => void) => {
@@ -84,6 +111,22 @@ export default function NewItemModal() {
             >
               <ModalBody className="w-full">
                 <ImageUpload onUpload={(file) => setItemImage(file)} />
+                <Button
+                  color="secondary"
+                  variant="flat"
+                  onPress={handleGenerateImage}
+                  isDisabled={!name || generatingImage || loading}
+                  className="w-full"
+                >
+                  {generatingImage ? (
+                    <>
+                      <Spinner color="default" size="sm" />
+                      {t("generatingImage")}
+                    </>
+                  ) : (
+                    t("generateImageFromName")
+                  )}
+                </Button>
                 <Divider />
                 <ItemNameInput
                   name={name}

@@ -1,4 +1,9 @@
-import { pipeline, ImageToTextPipeline, Text2TextGenerationPipeline, TranslationPipeline } from "@huggingface/transformers";
+import {
+  pipeline,
+  ImageToTextPipeline,
+  Text2TextGenerationPipeline,
+  TranslationPipeline,
+} from "@huggingface/transformers";
 
 declare global {
   var imageCaptioningCache: ImageToTextPipeline | undefined;
@@ -8,7 +13,10 @@ declare global {
 
 async function getImageCaptioning(): Promise<ImageToTextPipeline> {
   if (!globalThis.imageCaptioningCache) {
-    const pipe = await pipeline("image-to-text", "Xenova/vit-gpt2-image-captioning");
+    const pipe = await pipeline(
+      "image-to-text",
+      "Xenova/vit-gpt2-image-captioning"
+    );
     globalThis.imageCaptioningCache = pipe as ImageToTextPipeline;
   }
   return globalThis.imageCaptioningCache;
@@ -24,18 +32,22 @@ async function getTextGeneration(): Promise<Text2TextGenerationPipeline> {
 
 async function getTranslation(): Promise<TranslationPipeline> {
   if (!globalThis.translationCache) {
-    const pipe = await pipeline("translation", "Xenova/nllb-200-distilled-600M");
+    const pipe = await pipeline(
+      "translation",
+      "Xenova/nllb-200-distilled-600M"
+    );
     globalThis.translationCache = pipe as TranslationPipeline;
   }
   return globalThis.translationCache;
 }
 
 export async function getPipeline() {
-  const [imageCaptioning, textGeneration, translation] = await Promise.all([
-    getImageCaptioning(),
-    getTextGeneration(),
-    getTranslation(),
-  ]);
+  const [imageCaptioning, textGeneration, translation] =
+    await Promise.all([
+      getImageCaptioning(),
+      getTextGeneration(),
+      getTranslation(),
+    ]);
 
   return {
     imageCaptioning,
